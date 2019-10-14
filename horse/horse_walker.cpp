@@ -57,10 +57,55 @@ bool HorseWalker::findPathRec(Position start, Position end) {
   return false;
 }
 
+bool HorseWalker::findPathStack(Position start, Position end) {
+  stack.push(start);
+
+  while(!stack.empty()) {
+
+    Position current = stack.peek();
+  
+    if (!insideBoard(current) || board[current.first][current.second]) {
+      // излязохме извън дъската или вече сме стъпвали тук
+      // отказваме се от current
+      stack.pop();
+    } else {
+      std::clog << "Стъпка напред върху " << current << std::endl;
+      path.push(current);
+      board[current.first][current.second] = true;
+
+      if (current == end) {
+        // намерихме път
+        printPath();
+        return true;
+      }
+
+      for(int dx = -2; dx <= 2; dx++)
+        if (dx != 0)
+          for(int sign : {-1, 1}) {
+            int dy = sign * (3 - std::abs(dx));
+            // добавям всички възможности на стека
+            stack.push(Position(current.first + dx, current.second + dy));
+          }
+    }
+  }
+
+    //  std::clog << "Стъпка назад от " << start << std::endl;
+    //  path.pop();
+  return false;
+}
+
 void HorseWalker::printPath() const {
   Path copy = path;
-  std::clog << copy.pop();
-  while (!copy.empty())
-    std::clog << " <- " << copy.pop();
+  Position prev = copy.pop();
+  std::clog << prev;
+  while (!copy.empty()) {
+    Position current = copy.pop();
+    std::clog << " <- " << current;
+    if (std::abs((int)prev.first - (int)current.first) + std::abs((int)prev.second - (int)current.second) != 3) {
+      std::cerr << "GOTCHA! ";
+      //exit(1);
+    }
+    prev = current;
+  }
   std::clog << std::endl;
 }
