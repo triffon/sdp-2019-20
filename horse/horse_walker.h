@@ -1,4 +1,5 @@
 #include <vector>
+#include <iostream>
 
 using Position   = std::pair<unsigned, unsigned>;
 using Chessrow   = std::vector<bool>;
@@ -21,3 +22,5 @@ public:
   bool findPathRec(Position start, Position end);
   
 };
+
+std::ostream& operator<<(std::ostream& os, Position const& p);

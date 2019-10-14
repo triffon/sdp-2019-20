@@ -18,3 +18,37 @@ void HorseWalker::printBoard() const {
     std::clog << std::endl;
   }
 }
+
+std::ostream& operator<<(std::ostream& os, Position const& p) {
+  return os << '(' << p.first << ", " << p.second << ')';
+}
+
+
+bool HorseWalker::findPathRec(Position start, Position end) {
+  if (!insideBoard(start))
+    // излязохме извън дъската
+    return false;
+
+  if (board[start.first][start.second])
+    // вече сме стъпвали тук
+    return false;
+
+  std::clog << "Стъпка напред върху " << start << std::endl;
+  board[start.first][start.second] = true;
+
+  if (start == end)
+    // намерихме път
+    return true;
+
+  for(int dx = -2; dx <= 2; dx++)
+    if (dx != 0)
+      for(int sign : {-1, 1}) {
+        int dy = sign * (3 - std::abs(dx));
+        Position newstart(start.first + dx, start.second + dy);
+        if (findPathRec(newstart, end))
+          return true;
+      }
+
+  std::clog << "Стъпка назад от " << start << std::endl;
+  return false;
+}
