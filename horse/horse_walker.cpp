@@ -34,11 +34,14 @@ bool HorseWalker::findPathRec(Position start, Position end) {
     return false;
 
   std::clog << "Стъпка напред върху " << start << std::endl;
+  path.push(start);
   board[start.first][start.second] = true;
 
-  if (start == end)
+  if (start == end) {
     // намерихме път
+    printPath();
     return true;
+  }
 
   for(int dx = -2; dx <= 2; dx++)
     if (dx != 0)
@@ -50,5 +53,14 @@ bool HorseWalker::findPathRec(Position start, Position end) {
       }
 
   std::clog << "Стъпка назад от " << start << std::endl;
+  path.pop();
   return false;
+}
+
+void HorseWalker::printPath() const {
+  Path copy = path;
+  std::clog << copy.pop();
+  while (!copy.empty())
+    std::clog << " <- " << copy.pop();
+  std::clog << std::endl;
 }

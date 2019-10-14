@@ -69,7 +69,7 @@ template <typename T>
 T LinkedStack<T>::pop() {
   if (empty()) {
     std::cerr << "Опит за изваждане от празен стек!\n";
-    return 0;
+    return T();
   }
   
   T result = peek();
@@ -83,7 +83,7 @@ template <typename T>
 T LinkedStack<T>::peek() const {
   if (empty()) {
     std::cerr << "Опит за поглеждане в празен стек!\n";
-    return 0;
+    return T();
   }
 
   return top->data;
