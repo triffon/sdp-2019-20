@@ -15,6 +15,8 @@ class RPNCalculator {
   double apply(char op, double larg, double rarg) const;
 
   int priority(char op) const;
+
+  void popAndApply(char op);
 public:
   
   double calculateRPN(std::string rpn);
@@ -22,4 +24,6 @@ public:
   std::string toRPN(std::string expr);
 
   double calculate(std::string expr) { return calculateRPN(toRPN(expr)); }
+  
+  double calculateDirect(std::string expr);
 };

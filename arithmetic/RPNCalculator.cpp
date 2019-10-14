@@ -12,16 +12,18 @@ double RPNCalculator::apply(char op, double larg, double rarg) const {
   }
 }
 
+void RPNCalculator::popAndApply(char c) {
+  double rarg = results.pop();
+  double larg = results.pop();
+  results.push(apply(c,larg,rarg));
+}
+
 double RPNCalculator::calculateRPN(std::string rpn) {
-  for(char c : rpn) {
+  for(char c : rpn)
     if (isDigit(c))
       results.push(digitValue(c));
-    else {
-      double rarg = results.pop();
-      double larg = results.pop();
-      results.push(apply(c,larg,rarg));
-    }
-  }
+    else
+      popAndApply(c);
   return results.pop();
 }
 
@@ -59,4 +61,30 @@ int RPNCalculator::priority(char op) const {
   case '^': return 3;
   default : return 0;
   }
+}
+
+
+
+double RPNCalculator::calculateDirect(std::string expr) {
+  for(char c : expr) {
+    if (isDigit(c))
+      results.push(digitValue(c));
+    else if (c == '(')
+      ops.push(c);
+    else if (c != ')') {
+      // избутваме операциите с >= приоритет
+      while (!ops.empty() && priority(ops.peek()) >= priority(c)) {
+        // std::clog << "Избутваме " << ops.peek() << std::endl;
+        popAndApply(ops.pop());
+      }
+      ops.push(c);
+    }
+    else
+      // c == ')'
+      while ((c = ops.pop()) != '(')
+        popAndApply(c);
+  }
+  while (!ops.empty())
+    popAndApply(ops.pop());
+  return results.pop();
 }

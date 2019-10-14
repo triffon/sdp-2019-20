@@ -51,3 +51,18 @@ TEST_CASE("Trifon's revision of Viktor's expression computes correctly") {
   RPNCalculator rc;
   CHECK_EQ(rc.calculate("(((1*3)-4-5))"), doctest::Approx(-6).epsilon(EPS));
 }
+
+TEST_CASE("Expression where priority matters computes directly correctly") {
+  RPNCalculator rc;
+  CHECK_EQ(rc.calculateDirect("(1+2)*(3/4-5)"), doctest::Approx(-12.75).epsilon(EPS));
+}
+
+TEST_CASE("Viktor's expression computes directly correctly") {
+  RPNCalculator rc;
+  CHECK_EQ(rc.calculateDirect("(((1*3)+4-5))"), doctest::Approx(2).epsilon(EPS));
+}
+
+TEST_CASE("Trifon's revision of Viktor's expression computes directly correctly") {
+  RPNCalculator rc;
+  CHECK_EQ(rc.calculateDirect("(((1*3)-4-5))"), doctest::Approx(-6).epsilon(EPS));
+}
