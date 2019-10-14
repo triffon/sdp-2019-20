@@ -30,8 +30,16 @@ std::string RPNCalculator::toRPN(std::string expr) {
   for(char c : expr) {
     if (isDigit(c))
       rpn.push_back(c);
-    else if (c != ')')
+    else if (c == '(')
       ops.push(c);
+    else if (c != ')') {
+      // избутваме операциите с >= приоритет
+      while (!ops.empty() && priority(ops.peek()) >= priority(c)) {
+        // std::clog << "Избутваме " << ops.peek() << std::endl;
+        rpn.push_back(ops.pop());
+      }
+      ops.push(c);
+    }
     else
       // c == ')'
       while ((c = ops.pop()) != '(')
@@ -40,4 +48,15 @@ std::string RPNCalculator::toRPN(std::string expr) {
   while (!ops.empty())
     rpn.push_back(ops.pop());
   return rpn;
+}
+
+int RPNCalculator::priority(char op) const {
+  switch(op) {
+  case '+':
+  case '-': return 1;
+  case '*':
+  case '/': return 2;
+  case '^': return 3;
+  default : return 0;
+  }
 }

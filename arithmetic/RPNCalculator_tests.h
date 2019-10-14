@@ -35,7 +35,7 @@ TEST_CASE("Complex expression converts correctly") {
 
 TEST_CASE("Viktor's expression converts correctly") {
   RPNCalculator rc;
-  CHECK(rc.toRPN("(((1*3)+4-5))") == "13*45-+");
+  CHECK(rc.toRPN("(((1*3)+4-5))") == "13*4+5-");
 }
 
 TEST_CASE("Expression where priority matters computes correctly") {

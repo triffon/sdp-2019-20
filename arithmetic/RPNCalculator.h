@@ -13,6 +13,8 @@ class RPNCalculator {
   int digitValue(char c) const { return c - '0'; }
 
   double apply(char op, double larg, double rarg) const;
+
+  int priority(char op) const;
 public:
   
   double calculateRPN(std::string rpn);
