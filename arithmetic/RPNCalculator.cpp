@@ -24,3 +24,20 @@ double RPNCalculator::calculateRPN(std::string rpn) {
   }
   return results.pop();
 }
+
+std::string RPNCalculator::toRPN(std::string expr) {
+  std::string rpn;
+  for(char c : expr) {
+    if (isDigit(c))
+      rpn.push_back(c);
+    else if (c != ')')
+      ops.push(c);
+    else
+      // c == ')'
+      while ((c = ops.pop()) != '(')
+        rpn.push_back(c);
+  }
+  while (!ops.empty())
+    rpn.push_back(ops.pop());
+  return rpn;
+}
