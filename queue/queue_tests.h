@@ -29,3 +29,14 @@ TEST_CASE("Dequeueing the first element removes only it and does not change the 
   }
   CHECK(q.empty());
 }
+
+TEST_CASE("Multiple dequeues after enqueues should work") {
+  TestQueue q;
+  const int N = 150;
+  const int THE_ANSWER = 42;
+  for(int i = 0; i < N; i++) {
+    CHECK(q.enqueue(THE_ANSWER));
+    CHECK_EQ(q.dequeue(), THE_ANSWER);
+  }
+  CHECK(q.empty());
+}
