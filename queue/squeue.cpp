@@ -1,3 +1,6 @@
+#ifndef __SQUEUE_CPP
+#define __SQUEUE_CPP
+
 #include <iostream>
 #include "abstract_queue.h"
 
@@ -88,3 +91,5 @@ T& StaticQueue<T>::head() {
   
   return a[front];
 }
+
+#endif
