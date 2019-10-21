@@ -14,8 +14,15 @@ template <typename T>
 class LinkedQueue : AbstractQueue<T> {
   QueueElement<T> *front, *back;
 
+  void copy(LinkedQueue const&);
+  void erase();
+
 public:
   LinkedQueue() : front(nullptr), back(nullptr) {}
+
+  LinkedQueue(LinkedQueue const&);
+  LinkedQueue& operator=(LinkedQueue const&);
+  ~LinkedQueue();
   
   // проверка за празнота на опашка
   bool empty() const { return front == nullptr; }
@@ -79,6 +86,40 @@ T& LinkedQueue<T>::head() {
     std::cerr << "Опит за поглеждане в празна опашка\n";
 
   return front->data;
+}
+
+template <typename T>
+LinkedQueue<T>::LinkedQueue(LinkedQueue const& lq) : front(nullptr), back(nullptr) {
+  copy(lq);
+}
+
+template <typename T>
+LinkedQueue<T>& LinkedQueue<T>::operator=(LinkedQueue const& lq) {
+  if (this != &lq) {
+    erase();
+    copy(lq);
+  }
+  return *this;
+}
+
+template <typename T>
+LinkedQueue<T>::~LinkedQueue() {
+  erase();
+}
+
+template <typename T>
+void LinkedQueue<T>::copy(LinkedQueue const& lq) {
+  QueueElement<T>* p = lq.front;
+  while (p) {
+    enqueue(p->data);
+    p = p->next;
+  }
+}
+
+template <typename T>
+void LinkedQueue<T>::erase() {
+  while (!empty())
+    dequeue();
 }
 
 #endif
