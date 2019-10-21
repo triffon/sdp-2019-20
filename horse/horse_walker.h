@@ -6,8 +6,8 @@ using Position   = std::pair<unsigned, unsigned>;
 using Path       = LinkedStack<Position>;
 using Chessrow   = std::vector<bool>;
 using Chessboard = std::vector<Chessrow>;
-
-using StepStack  = Path;
+using StackFrame = LinkedStack<Position>;
+using StepStack  = LinkedStack<StackFrame>;
 
 class HorseWalker {
 

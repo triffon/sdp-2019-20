@@ -58,16 +58,27 @@ bool HorseWalker::findPathRec(Position start, Position end) {
 }
 
 bool HorseWalker::findPathStack(Position start, Position end) {
-  stack.push(start);
+  // стартова стекова рамка: единствена възможност за стартиране
+  StackFrame startFrame;
+  startFrame.push(start);
+  stack.push(startFrame);
 
   while(!stack.empty()) {
 
-    Position current = stack.peek();
+    StackFrame& currentFrame = stack.peek();
+    Position current = currentFrame.peek();
   
     if (!insideBoard(current) || board[current.first][current.second]) {
       // излязохме извън дъската или вече сме стъпвали тук
       // отказваме се от current
-      stack.pop();
+      currentFrame.pop();
+      // да не би стековата рамка да се изчерпи?
+      if (currentFrame.empty()) {
+        std::clog << "Стъпка назад"/* от " << start */ << std::endl;
+        // премахваме стековата рамка от стека
+        stack.pop();
+        path.pop();
+      }
     } else {
       std::clog << "Стъпка напред върху " << current << std::endl;
       path.push(current);
@@ -79,18 +90,22 @@ bool HorseWalker::findPathStack(Position start, Position end) {
         return true;
       }
 
+      // създаваме нова стекова рамка
+      StackFrame newFrame;
+      
       for(int dx = -2; dx <= 2; dx++)
         if (dx != 0)
           for(int sign : {-1, 1}) {
             int dy = sign * (3 - std::abs(dx));
-            // добавям всички възможности на стека
-            stack.push(Position(current.first + dx, current.second + dy));
+            // добавяме всички възможности във новата стекова рамка
+            newFrame.push(Position(current.first + dx, current.second + dy));
           }
+
+      // добавяме новата стекова рамка в стека
+      stack.push(newFrame);
     }
   }
 
-    //  std::clog << "Стъпка назад от " << start << std::endl;
-    //  path.pop();
   return false;
 }
 

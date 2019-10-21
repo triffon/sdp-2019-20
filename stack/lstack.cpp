@@ -12,7 +12,7 @@ struct StackElement {
 };
 
 template <typename T>
-class LinkedStack : public AbstractStack<T> {
+class LinkedStack /* : public AbstractStack<T> */ {
   // представяне
   StackElement<T>* top; // указател към връх на стека
 
@@ -40,7 +40,10 @@ public:
   T pop();
 
   // поглеждане на последно включения елемент
-  T peek() const;
+  T const& peek() const;
+
+  // поглеждане на последно включения елемент с възможност за промяната му
+  T& peek();
 
   ~LinkedStack();
 };
@@ -80,10 +83,21 @@ T LinkedStack<T>::pop() {
 }
 
 template <typename T>
-T LinkedStack<T>::peek() const {
+T const& LinkedStack<T>::peek() const {
   if (empty()) {
     std::cerr << "Опит за поглеждане в празен стек!\n";
     return T();
+  }
+
+  return top->data;
+}
+
+
+template <typename T>
+T& LinkedStack<T>::peek() {
+  if (empty()) {
+    std::cerr << "Опит за поглеждане в празен стек!\n";
+    return top->data; // лошо!!
   }
 
   return top->data;
