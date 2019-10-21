@@ -11,7 +11,7 @@ struct QueueElement {
 };
 
 template <typename T>
-class LinkedQueue : AbstractQueue<T> {
+class LinkedQueue : public AbstractQueue<T> {
   QueueElement<T> *front, *back;
 
   void copy(LinkedQueue const&);
