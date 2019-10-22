@@ -74,7 +74,7 @@ bool HorseWalker::findPathStack(Position start, Position end) {
       currentFrame.pop();
       // да не би стековата рамка да се изчерпи?
       if (currentFrame.empty()) {
-        std::clog << "Стъпка назад"/* от " << start */ << std::endl;
+        std::clog << "Стъпка назад от " << path.peek() << std::endl;
         // премахваме стековата рамка от стека
         stack.pop();
         path.pop();
