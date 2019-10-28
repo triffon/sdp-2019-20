@@ -60,6 +60,12 @@ T minQueue(AbstractQueue<T>& q, T const& sentinel = T()) {
   return min;
 }
 
+template <typename T>
+void sortQueue(AbstractQueue<T>& input, AbstractQueue<T>& result, T const& sentinel = T()) {
+  while(!input.empty())
+    result.enqueue(minQueue(input, sentinel));
+}
+
 #include "queue_tests.h"
 
 int main() {

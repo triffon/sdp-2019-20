@@ -58,3 +58,14 @@ TEST_CASE("Minqueue correctly extracts the minimal element in a queue with eleme
   }
   CHECK(s.empty());
 }
+
+TEST_CASE("sortQueue correctly sorts a queue with elements in no particular order") {
+  TestQueue q;
+  for(int x : { 5, 8, 9, 7, 4, 2, 1, 6, 10, 3 })
+    q.enqueue(x);
+  TestQueue r;
+  sortQueue(q, r, 0);
+  for(int i = 1; i <= 10; i++)
+    CHECK_EQ(r.dequeue(), i);
+  CHECK(r.empty());
+}
