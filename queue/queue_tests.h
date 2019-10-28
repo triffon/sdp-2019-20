@@ -1,3 +1,5 @@
+#include <set>
+
 TEST_CASE("Default constructor creates empty queue") {
   TestQueue q;
   CHECK(q.empty());
@@ -39,4 +41,20 @@ TEST_CASE("Multiple dequeues after enqueues should work") {
     CHECK_EQ(q.dequeue(), THE_ANSWER);
   }
   CHECK(q.empty());
+}
+
+TEST_CASE("Minqueue correctly extracts the minimal element in a queue with elements in no particular order") {
+  TestQueue q;
+  std::set<int> s = {5, 3, 6, 1, 2};
+  for (int x : s)
+    q.enqueue(x);
+  int min = minQueue(q, 0);
+  CHECK_EQ(min, 1);
+  s.erase(s.find(min));
+  while (!q.empty()) {
+    std::set<int>::iterator it = s.find(q.dequeue());
+    CHECK(it != s.end());
+    s.erase(it);
+  }
+  CHECK(s.empty());
 }

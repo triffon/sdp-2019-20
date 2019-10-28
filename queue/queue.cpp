@@ -9,8 +9,6 @@
 // using TestQueue = StaticQueue<int>;
 using TestQueue = LinkedQueue<int>;
 
-#include "queue_tests.h"
-
 template <typename T>
 void removeHead(AbstractQueue<T>& q, T const& x) {
   if (q.head() == x)
@@ -38,6 +36,31 @@ void hamming(int n) {
   }
   std::cout << std::endl;
 }
+
+template <typename T>
+T minQueue(AbstractQueue<T>& q, T const& sentinel = T()) {
+  if (q.empty()) {
+    std::cerr << "Извикване на minQueue над празна опашка!\n";
+    return T();
+  }
+  T min = q.dequeue();
+  q.enqueue(sentinel);
+  T current;
+
+  while ((current = q.dequeue()) != sentinel) {
+    if (current < min) {
+      // включваме в опашката стария минимум
+      q.enqueue(min);
+      // и го обновяваме
+      min = current;
+    } else
+      // просто връщаме елемента отзад на опашката
+      q.enqueue(current);
+  }
+  return min;
+}
+
+#include "queue_tests.h"
 
 int main() {
   // пускане на тестовете
