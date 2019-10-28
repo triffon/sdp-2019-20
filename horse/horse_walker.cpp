@@ -109,6 +109,49 @@ bool HorseWalker::findPathStack(Position start, Position end) {
   return false;
 }
 
+bool HorseWalker::findPathQueue(Position start, Position end) {
+  queue.enqueue(start);
+
+  Position current;
+  StepStack history;
+
+  while (!queue.empty() && (current = queue.dequeue()) != end) {
+    std::clog << "Разглеждаме позиция " << current << std::endl;
+    if (insideBoard(current) && !board[current.first][current.second]) {
+      // маркираме позицията за обходена
+      board[current.first][current.second] = true;
+      for(int dx = -2; dx <= 2; dx++)
+        if (dx != 0)
+          for(int sign : {-1, 1}) {
+            int dy = sign * (3 - std::abs(dx));
+            // добавяме всички възможности в опашката
+            Position newPos(current.first + dx, current.second + dy);
+            queue.enqueue(newPos);
+            history.push(Step(current, newPos));
+          }
+    }
+  }
+  // queue.empty() - няма как да стигнем до end
+  // current == end - стигнали сме до end
+         
+  if (current == end) {
+    // възстановяваме пътя
+    // първо извеждаме последната позиция
+    std::clog << current;
+    while(!history.empty()) {
+      Step step = history.pop();
+      if (step.second == current) {
+        current = step.first;
+        std::clog << " <- " << current;
+      }
+    }
+    std::clog << std::endl;
+    return true;
+  }
+  return false;
+}
+
+
 void HorseWalker::printPath() const {
   Path copy = path;
   Position prev = copy.pop();

@@ -10,6 +10,9 @@ int main() {
   // std::cout << HorseWalker(4).findPathStack({0, 0}, {3, 3}) << std::endl;
   std::cout << HorseWalker(4).findPathRec  ({0, 0}, {0, 2}) << std::endl;
   std::cout << HorseWalker(4).findPathStack({0, 0}, {0, 2}) << std::endl;
+  std::cout << HorseWalker(3).findPathQueue({0, 0}, {1, 1}) << std::endl;
+  std::cout << HorseWalker(4).findPathQueue({0, 0}, {0, 2}) << std::endl;
+  std::cout << HorseWalker(8).findPathQueue({0, 0}, {7, 7}) << std::endl;
   /*
   const int N = 4;
   for(int i = 0; i < N; i++)
