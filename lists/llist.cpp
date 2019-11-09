@@ -61,12 +61,12 @@ class LinkedList {
   using LLE = LinkedListElement<T>;
   LLE *front, *back;
 
-  void copy(LinkedList const&);
   void erase();
 
 public:
 
-  using I   = LinkedListIterator<T>;
+  using I      = LinkedListIterator<T>;
+  using Type   = T;
 
   LinkedList() : front(nullptr), back(nullptr) {}
 
@@ -109,6 +109,11 @@ public:
 
   LinkedList<T>& operator+=(T const& x) { insertLast(x); return *this; }
 
+  // залепва елементите на l в края на списъка
+  void append(LinkedList const& l);
+
+  // присвоява си елементите на l като ги залепва в края на списъка
+  void appendAssign(LinkedList& l);
 private:
 
   I findPrev(I const&);
@@ -220,20 +225,20 @@ bool LinkedList<T>::deleteBefore(I const& it, T& x) {
 
 template <typename T>
 LinkedList<T>::LinkedList(LinkedList const& l) : front(nullptr), back(nullptr) {
-  copy(l);
+  append(l);
 }
 
 template <typename T>
 LinkedList<T>& LinkedList<T>::operator=(LinkedList const& l) {
   if (this != &l) {
     erase();
-    copy(l);
+    append(l);
   }
   return *this;
 }
 
 template <typename T>
-void LinkedList<T>::copy(LinkedList const& l) {
+void LinkedList<T>::append(LinkedList const& l) {
   for(T const& x : l)
     insertLast(x);
 }
@@ -242,4 +247,15 @@ template <typename T>
 void LinkedList<T>::erase() {
   while (!empty())
     deleteFirst();
+}
+
+template <typename T>
+void LinkedList<T>::appendAssign(LinkedList& l) {
+  if (back != nullptr)
+    back->next = l.front;
+  
+  if (l.back != nullptr)
+    back = l.back;
+
+  l.front = l.back = nullptr;
 }

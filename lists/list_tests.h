@@ -203,3 +203,58 @@ TEST_CASE("Assignment of lists avoids sharing") {
   }
   CHECK_EQ(i, 24);
 }
+
+TEST_CASE("Appending two lists") {
+  TestList l1, l2;
+  // числата от 1 до 10
+  for(int i = 1; i <= 10; i++)
+    l1 += i;
+
+  // числата от 11 до 20
+  for(int i = 11; i <= 20; i++)
+    l2 += i;
+
+  l1.append(l2);
+
+  // получихме числата от 1 до 20
+  int i = 1;
+  for(int x : l1)
+    CHECK_EQ(i++, x);
+  CHECK_EQ(i, 21);
+}
+
+// TODO: тестове за граничните случаи на append
+
+TEST_CASE("Append a second list by stealing its elements") {
+  TestList l1, l2;
+  // числата от 1 до 10
+  for(int i = 1; i <= 10; i++)
+    l1 += i;
+
+  // числата от 11 до 20
+  for(int i = 11; i <= 20; i++)
+    l2 += i;
+
+  l1.appendAssign(l2);
+  CHECK(l2.empty());
+
+  // получихме числата от 1 до 20
+  int i = 1;
+  for(int x : l1)
+    CHECK_EQ(i++, x);
+  CHECK_EQ(i, 21);
+}
+
+TEST_CASE("Reversal of non-empty list") {
+  TestList l;
+  // числата от 1 до 10
+  for(int i = 1; i <= 10; i++)
+    l += i;
+
+  reverse(l);
+  
+  int i = 10;
+  for(int x : l)
+    CHECK_EQ(x, i--);
+  CHECK_EQ(i, 0);
+}
