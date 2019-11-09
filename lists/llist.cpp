@@ -19,7 +19,7 @@ public:
   I next() const {
     if (!valid())
       return *this;
-    
+
     return I(ptr->next);
   }
 
@@ -35,8 +35,8 @@ public:
   I& operator++() {
     return (*this = next());
   }
-  
-  // it++ 
+
+  // it++
   I operator++(int) {
     I save = *this;
     ++(*this);
@@ -60,6 +60,7 @@ template <typename T>
 class LinkedList {
   using LLE = LinkedListElement<T>;
   LLE *front, *back;
+
 public:
 
   using I   = LinkedListIterator<T>;
@@ -83,15 +84,18 @@ public:
   bool deleteAt    (I const& it, T& x);
   bool deleteAfter (I const& it, T& x);
 
+  // O(1) по време и памет
   bool insertFirst(T const& x) { return insertBefore(begin(), x); }
   bool insertLast (T const& x) { return insertAfter (end()  , x); }
 
+  // O(1) по време и памет
   bool deleteFirst(T& x) { return deleteAt(begin(), x); }
   bool deleteLast (T& x) { return deleteAt(end(),   x); }
 
+  // O(1) по време и памет
   bool deleteFirst() { return deleteAt(begin()); }
   bool deleteLast () { return deleteAt(end());   }
-  
+
   T const& getAt(I const& it) const { return it.getConst(); }
   T&       getAt(I const& it)       { return it.get();      }
 
@@ -99,21 +103,23 @@ public:
   I end()   const { return I();      }
 
   LinkedList<T>& operator+=(T const& x) { insertLast(x); return *this; }
+
+private:
+
+  I findPrev(I const&);
 };
 
 // O(1) по време и памет
 template <typename T>
 bool LinkedList<T>::insertAfter(I const& it, T const& x) {
-  // it.ptr == nullptr <-> искаме да добавяме в края
   if (empty()) {
-    // front == back == nullptr
-    front = back = new LLE{x, nullptr};
-    return true;
+    return insertFirst(x);
   }
 
+  // it.ptr == nullptr <-> искаме да добавяме в края
   LLE* p = new LLE{x, nullptr};
 
-  if (!it) {
+  if (!it || it.ptr == back) {
     // искаме да добавяме в края
     back->next = p;
     back = p;
@@ -132,16 +138,70 @@ bool LinkedList<T>::deleteAfter(I const& it, T& x) {
     // не можем да изтриваме след невалиден итератор
     return false;
   // it.valid()
-  
+
   LLE* p = it.ptr->next;
-  
+
   if (!p)
     // не можем да изтриваме след края
     return false;
   // p != nullptr
-  
+
   it.ptr->next = p->next;
   x = p->data;
+
+  if (back == p)
+    // изтриваме последния елемент!
+    back = it.ptr;
+
   delete p;
   return true;
+}
+
+// O(n) по време и O(1) по памет
+template <typename T>
+bool LinkedList<T>::insertBefore(I const& it, T const& x) {
+  if (it == begin()) {
+    // вмъкваме в началото: специален случай
+    LLE* p = new LLE{x, front};
+    front = p;
+    if (back == nullptr)
+      // вмъкваме в празен списък
+      back = p;
+    return true;
+  }
+  return insertAfter(findPrev(it), x);
+}
+
+// O(n) по време и O(1) по памет
+template <typename T>
+LinkedListIterator<T> LinkedList<T>::findPrev(LinkedListIterator<T> const& it) {
+  if (!it)
+    return I(back);
+  I result = begin();
+  while (result && result.ptr->next != it.ptr)
+    ++result;
+  // result.ptr->next == it.ptr
+  return result;
+}
+
+// O(n) по време и O(1) по памет
+template <typename T>
+bool LinkedList<T>::deleteAt(I const& it, T& x) {
+  // ако it.ptr е невалиден, имаме предвид изтриване на последния елемент
+  if (!it)
+    return deleteAfter(findPrev(I(back)), x);
+
+  // можем да считаме, че списъкът не е празен
+  if (it == begin()) {
+    x = front->data;
+    LLE* p = front;
+    front = front->next;
+    if (back == p)
+      // изтриваме последния елемент от списъка
+      back = nullptr;
+    delete p;
+    return true;
+  }
+
+  return deleteAfter(findPrev(it), x);
 }
