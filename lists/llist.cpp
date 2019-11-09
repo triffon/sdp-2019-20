@@ -45,6 +45,9 @@ public:
 
   // *it = 3;
   T& operator*() { return get(); }
+
+  bool operator==(I const& it) const { return ptr == it.ptr; }
+  bool operator!=(I const& it) const { return !(*this == it); }
 };
 
 template <typename T>
@@ -87,26 +90,30 @@ public:
   T&       getAt(I const& it)       { return it.get();      }
 
   I begin() const { return I(front); }
-  I end()   const { return I(back);  }
+  I end()   const { return I();      }
+
+  LinkedList<T>& operator+=(T const& x) { insertLast(x); return *this; }
 };
 
 template <typename T>
 bool LinkedList<T>::insertAfter(I const& it, T const& x) {
-  if (!it && !empty())
-    return false;
-
-  if (!it) {
-    // empty() == true
+  // it.ptr == nullptr <-> искаме да добавяме в края
+  if (empty()) {
     // front == back == nullptr
     front = back = new LLE{x, nullptr};
     return true;
-  }  
-  // it.valid()
-  
-  LLE* p = new LLE{x, it.ptr->next};
-  if (back == it.ptr)
-    // добавяме в края на списъка, трябва да преместим back
+  }
+
+  LLE* p = new LLE{x, nullptr};
+
+  if (!it) {
+    // искаме да добавяме в края
+    back->next = p;
     back = p;
-  it.ptr->next = p;
+  } else {
+    // искаме да добавяме някъде по средата
+    p->next = it.ptr->next;
+    it.ptr->next = p;
+  }
   return true;
 }
