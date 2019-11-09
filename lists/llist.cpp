@@ -48,6 +48,12 @@ public:
 
   bool operator==(I const& it) const { return ptr == it.ptr; }
   bool operator!=(I const& it) const { return !(*this == it); }
+
+  I& operator+=(unsigned n) {
+    for(unsigned i = 0; i < n; i++)
+      ++(*this);
+    return *this;
+  }
 };
 
 template <typename T>
@@ -69,9 +75,9 @@ public:
   bool insertBefore(I const& it, T const& x);
   bool insertAfter (I const& it, T const& x);
 
-  bool deleteBefore(I const& it);
-  bool deleteAt    (I const& it);
-  bool deleteAfter (I const& it);
+  bool deleteBefore(I const& it) { T tmp; return deleteBefore(it, tmp); }
+  bool deleteAt    (I const& it) { T tmp; return deleteAt    (it, tmp); }
+  bool deleteAfter (I const& it) { T tmp; return deleteAfter (it, tmp); }
 
   bool deleteBefore(I const& it, T& x);
   bool deleteAt    (I const& it, T& x);
@@ -95,6 +101,7 @@ public:
   LinkedList<T>& operator+=(T const& x) { insertLast(x); return *this; }
 };
 
+// O(1) по време и памет
 template <typename T>
 bool LinkedList<T>::insertAfter(I const& it, T const& x) {
   // it.ptr == nullptr <-> искаме да добавяме в края
@@ -115,5 +122,26 @@ bool LinkedList<T>::insertAfter(I const& it, T const& x) {
     p->next = it.ptr->next;
     it.ptr->next = p;
   }
+  return true;
+}
+
+// O(1) по време и по памет
+template <typename T>
+bool LinkedList<T>::deleteAfter(I const& it, T& x) {
+  if (!it)
+    // не можем да изтриваме след невалиден итератор
+    return false;
+  // it.valid()
+  
+  LLE* p = it.ptr->next;
+  
+  if (!p)
+    // не можем да изтриваме след края
+    return false;
+  // p != nullptr
+  
+  it.ptr->next = p->next;
+  x = p->data;
+  delete p;
   return true;
 }
