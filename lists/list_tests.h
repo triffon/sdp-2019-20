@@ -61,7 +61,7 @@ TEST_CASE("Delete last element works correctly") {
   CHECK_EQ(*(it += 9), 11);
 }
 
-// TODO: отрицателни тестове за deleteAfter
+// TODO: отрицателни тестове за deleteAfter, deleteAt и deleteBefore
 
 TEST_CASE("Insert consecutively elements at the beginning of the list") {
   TestList l;
@@ -90,6 +90,8 @@ TEST_CASE("Insert elements before every second element in the list") {
     CHECK_EQ(x, i++);
   CHECK_EQ(i, 11);
 }
+
+// TODO: тестове за deleteFirst и deleteLast
 
 TEST_CASE("Delete every second element in the list") {
   TestList l;
@@ -126,11 +128,78 @@ TEST_CASE("Delete before every second element of the list") {
     CHECK(l.deleteBefore(it, x));
     CHECK_EQ(i, x);
   }
-  // остават само нечетните
-  i = 1;
+  // остават само четните
+  i = 2;
   for(int x : l) {
-    CHECK_EQ(x, i);
+    CHECK_EQ(i, x);
     i += 2;
   }
-  CHECK_EQ(i, 11);
+  CHECK_EQ(i, 12);
+}
+
+// TODO: тестове, че front и back остават коректно насочени след всяка операция
+// например, чрез вмъкване/изтриване на елемент в началото/края
+
+TEST_CASE("Copy initialization of lists avoids sharing") {
+  TestList l1;
+  // числата от 1 до 10
+  for(int i = 1; i <= 10; i++)
+    l1 += i;
+
+  TestList l2 = l1;
+  l1 += 11;
+  l1.insertFirst(0);
+
+  for(int& x : l2)
+    x *= 2;
+  l2 += 22;
+  l2.insertFirst(0);
+
+  // в l1 са числата от 0 до 11
+  int i = 0;
+  for(int x : l1)
+    CHECK_EQ(i++, x);
+  CHECK_EQ(i, 12);
+
+  // в l2 са четните числа от 0 до 22
+  i = 0;
+  for(int x : l2) {
+    CHECK_EQ(i, x);
+    i += 2;
+  }
+  CHECK_EQ(i, 24);
+}
+
+TEST_CASE("Assignment of lists avoids sharing") {
+  TestList l1, l2;
+  // числата от 1 до 10
+  for(int i = 1; i <= 10; i++)
+    l1 += i;
+
+  // числата от 11 до 20
+  for(int i = 11; i <= 20; i++)
+    l2 += i;
+
+  l2 = l1;
+  l1 += 11;
+  l1.insertFirst(0);
+
+  for(int& x : l2)
+    x *= 2;
+  l2 += 22;
+  l2.insertFirst(0);
+
+  // в l1 са числата от 0 до 11
+  int i = 0;
+  for(int x : l1)
+    CHECK_EQ(i++, x);
+  CHECK_EQ(i, 12);
+
+  // в l2 са четните числа от 0 до 22
+  i = 0;
+  for(int x : l2) {
+    CHECK_EQ(i, x);
+    i += 2;
+  }
+  CHECK_EQ(i, 24);
 }

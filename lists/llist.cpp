@@ -61,6 +61,9 @@ class LinkedList {
   using LLE = LinkedListElement<T>;
   LLE *front, *back;
 
+  void copy(LinkedList const&);
+  void erase();
+
 public:
 
   using I   = LinkedListIterator<T>;
@@ -69,7 +72,7 @@ public:
 
   LinkedList(LinkedList const& ll);
   LinkedList& operator=(LinkedList const& ll);
-  ~LinkedList() {}
+  ~LinkedList() { erase(); }
 
   bool empty() const { return front == nullptr; }
 
@@ -90,10 +93,12 @@ public:
 
   // O(1) по време и памет
   bool deleteFirst(T& x) { return deleteAt(begin(), x); }
+  // O(n) по време и O(1) по памет
   bool deleteLast (T& x) { return deleteAt(end(),   x); }
 
   // O(1) по време и памет
   bool deleteFirst() { return deleteAt(begin()); }
+  // O(n) по време и O(1) по памет
   bool deleteLast () { return deleteAt(end());   }
 
   T const& getAt(I const& it) const { return it.getConst(); }
@@ -175,24 +180,23 @@ bool LinkedList<T>::insertBefore(I const& it, T const& x) {
 // O(n) по време и O(1) по памет
 template <typename T>
 LinkedListIterator<T> LinkedList<T>::findPrev(LinkedListIterator<T> const& it) {
+  LLE* target;
   if (!it)
-    return I(back);
+    // имаме предвид да търсим елемента преди последния
+    target = back;
+  else
+    target = it.ptr;
   I result = begin();
-  while (result && result.ptr->next != it.ptr)
+  while (result && result.ptr->next != target)
     ++result;
-  // result.ptr->next == it.ptr
+  // result.ptr->next == target
   return result;
 }
 
 // O(n) по време и O(1) по памет
 template <typename T>
 bool LinkedList<T>::deleteAt(I const& it, T& x) {
-  // ако it.ptr е невалиден, имаме предвид изтриване на последния елемент
-  if (!it)
-    return deleteAfter(findPrev(I(back)), x);
-
-  // можем да считаме, че списъкът не е празен
-  if (it == begin()) {
+  if (!empty() && it == begin()) {
     x = front->data;
     LLE* p = front;
     front = front->next;
@@ -204,4 +208,38 @@ bool LinkedList<T>::deleteAt(I const& it, T& x) {
   }
 
   return deleteAfter(findPrev(it), x);
+}
+
+// O(n) по време и O(1) по памет
+template <typename T>
+bool LinkedList<T>::deleteBefore(I const& it, T& x) {
+  if (it == begin())
+    return false;
+  return deleteAt(findPrev(it), x);
+}
+
+template <typename T>
+LinkedList<T>::LinkedList(LinkedList const& l) : front(nullptr), back(nullptr) {
+  copy(l);
+}
+
+template <typename T>
+LinkedList<T>& LinkedList<T>::operator=(LinkedList const& l) {
+  if (this != &l) {
+    erase();
+    copy(l);
+  }
+  return *this;
+}
+
+template <typename T>
+void LinkedList<T>::copy(LinkedList const& l) {
+  for(T const& x : l)
+    insertLast(x);
+}
+
+template <typename T>
+void LinkedList<T>::erase() {
+  while (!empty())
+    deleteFirst();
 }
