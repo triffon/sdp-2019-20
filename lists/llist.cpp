@@ -14,6 +14,9 @@ class LinkedListIterator {
   using I   = LinkedListIterator<T>;
   LLE* ptr;
 public:
+
+  using Type   = T;
+
   LinkedListIterator(LLE* p = nullptr) : ptr(p) {}
 
   I next() const {

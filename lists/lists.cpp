@@ -75,5 +75,7 @@ List mergeSort(List const& l) {
   return merge(mergeSort(l1), mergeSort(l2));
 }
 
+#include "lists_highorder.cpp"
+
 #include "list_tests.h"
 

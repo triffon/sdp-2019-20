@@ -325,3 +325,84 @@ TEST_CASE("Merge sort a list") {
     CHECK_EQ(i++, x);
   CHECK_EQ(i, 11);  
 }
+
+int plus(const int& x, const int& y) { return x + y; }
+
+TEST_CASE("Sum list elements with foldr") {
+  TestList l;
+  // числата от 1 до 10
+  for(int i = 1; i <= 10; i++)
+    l += i;
+
+  CHECK_EQ(foldr(plus, 0, l.begin()), 55);
+}
+
+TEST_CASE("Sum list elements with foldl") {
+  TestList l;
+  // числата от 1 до 10
+  for(int i = 1; i <= 10; i++)
+    l += i;
+
+  CHECK_EQ(foldl(plus, 0, l.begin()), 55);
+}
+
+int square(int const& x) { return x * x; }
+
+TEST_CASE("Map list with square") {
+  TestList l;
+  // числата от 1 до 10
+  for(int i = 1; i <= 10; i++)
+    l += i;
+
+  TestList result = map(square, l);
+
+  // получихме квадратите на числата от 1 до 10
+  int i = 1;
+  for(int x : result)
+    CHECK_EQ(square(i++), x);
+  CHECK_EQ(i, 11);
+}
+
+TEST_CASE("Destrucive map list with square") {
+  TestList l;
+  // числата от 1 до 10
+  for(int i = 1; i <= 10; i++)
+    l += i;
+
+  mapd(square, l);
+
+  // получихме квадратите на числата от 1 до 10
+  int i = 1;
+  for(int x : l)
+    CHECK_EQ(square(i++), x);
+  CHECK_EQ(i, 11);
+}
+
+bool even(int const& x) { return x % 2 == 0; }
+bool odd (int const& x) { return x % 2 != 0; }
+
+TEST_CASE("Filter only even elements in a list") {
+  TestList l;
+  // числата от 1 до 10
+  for(int i = 1; i <= 10; i++)
+    l += i;
+
+  TestList result = filter(even, l);
+
+  // получихме четните числа от 1 до 10
+  int i = 2;
+  for(int x : result) {
+    CHECK_EQ(i, x);
+    i += 2;
+  }
+  CHECK_EQ(i, 12);
+}
+
+TEST_CASE("Sum odd squares in a list") {
+  TestList l;
+  // числата от 1 до 5
+  for(int i = 1; i <= 5; i++)
+    l += i;
+
+  CHECK_EQ(foldr(plus, 0, map(square, filter(odd, l)).begin()), 35);
+}
