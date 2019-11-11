@@ -334,7 +334,8 @@ TEST_CASE("Sum list elements with foldr") {
   for(int i = 1; i <= 10; i++)
     l += i;
 
-  CHECK_EQ(foldr(plus, 0, l.begin()), 55);
+  //  CHECK_EQ(foldr(plus, 0, l.begin()), 55);
+  CHECK_EQ(foldr<typename TestList::I, int>([](int const& x, int const& y) { return x + y; }, 0, l.begin()), 55);
 }
 
 TEST_CASE("Sum list elements with foldl") {
@@ -354,7 +355,8 @@ TEST_CASE("Map list with square") {
   for(int i = 1; i <= 10; i++)
     l += i;
 
-  TestList result = map(square, l);
+  //  TestList result = map(square, l);
+  TestList result = map<TestList, int>([](int const& x) { return x * x; }, l);
 
   // получихме квадратите на числата от 1 до 10
   int i = 1;
@@ -387,7 +389,8 @@ TEST_CASE("Filter only even elements in a list") {
   for(int i = 1; i <= 10; i++)
     l += i;
 
-  TestList result = filter(even, l);
+  //  TestList result = filter(even, l);
+  TestList result = filter<TestList, int>([](int const& x) { return x % 2 == 0; }, l);
 
   // получихме четните числа от 1 до 10
   int i = 2;
