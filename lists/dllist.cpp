@@ -141,6 +141,25 @@ public:
 
 template <typename T>
 bool DoubleLinkedList<T>::insertAfter(I const& it, T const& x) {
+  if (empty()) {
+    front = back = new DLLE{x, nullptr, nullptr};
+    return true;
+  }
+
+  // !empty()
+
+  if (!it || it.ptr == back) {
+    // добавяме след края на списъка
+    back = new DLLE{x, nullptr, back};
+    back->prev->next = back;
+    return true;
+  }
+
+  // it.ptr != nullptr
+  // it.ptr->next != nullptr
+  DLLE *p = new DLLE{x, it.ptr->next, it.ptr};
+  p->next->prev = p;
+  p->prev->next = p;
   return false;
 }
 
@@ -152,13 +171,45 @@ bool DoubleLinkedList<T>::deleteAfter(I const& it, T& x) {
 // O(n) по време и O(1) по памет
 template <typename T>
 bool DoubleLinkedList<T>::insertBefore(I const& it, T const& x) {
-  return false;
+  if (empty())
+    return insertLast(x);
+
+  // вмъкване преди първи елемент
+  if (it.ptr == front              ||    // посочили сме за итератор първия елемент
+      (!it && back->prev == nullptr)) {  // искаме да вмъкваме преди последния елемент, но имаме само един елемент!
+    // добавяме преди началото на списъка
+    front = new DLLE{x, front, nullptr};
+    front->next->prev = front;
+    return true;
+  } 
+
+  // не вмъкваме преди първи елемент
+  if (!it)
+    // искаме да вмъкваме преди последния елемент
+    return insertAfter(I(back->prev), x);
+
+  // общ случай
+  return insertAfter(it.prev(), x);
 }
 
-// O(n) по време и O(1) по памет
 template <typename T>
 bool DoubleLinkedList<T>::deleteAt(I const& it, T& x) {
-  return false;
+  if (it.ptr->prev != nullptr)
+    it.ptr->prev->next = it.ptr->next;
+  else
+    // изтриваме първия елемент, трябва да преместим front
+    front = it.ptr->next;
+
+  if (it.ptr->next != nullptr)
+    it.ptr->next->prev = it.ptr->prev;
+  else
+    // изтриваме последния елемент, трябва да преместим back
+    back = it.ptr->prev;
+
+  // изтриването на последния елемент работи както се очаква
+  x = it.ptr->data;
+  delete it.ptr;
+  return true;
 }
 
 // O(n) по време и O(1) по памет
