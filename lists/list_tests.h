@@ -252,9 +252,76 @@ TEST_CASE("Reversal of non-empty list") {
     l += i;
 
   reverse(l);
-  
+
   int i = 10;
   for(int x : l)
     CHECK_EQ(x, i--);
   CHECK_EQ(i, 0);
+}
+
+TEST_CASE("Length works correctly") {
+  TestList l;
+  for(int i = 1; i <= 10; i++) {
+    CHECK_EQ(length(l), i - 1);
+    l += i;
+  }
+  CHECK_EQ(length(l), 10);
+}
+
+TEST_CASE("Split list of even length") {
+  TestList l, l1, l2;
+  // числата от 1 до 10
+  for(int i = 1; i <= 10; i++)
+    l += i;
+
+  split(l, l1, l2);
+
+  // TODO: да се провери, че множествата на елементите на l1 и l2 общо правят
+  // множеството от елементите на l
+  CHECK_EQ(length(l1), length(l2));
+  CHECK_EQ(length(l1) + length(l2), length(l));
+}
+
+TEST_CASE("Split list of odd length") {
+  TestList l, l1, l2;
+  // числата от 1 до 11
+  for(int i = 1; i <= 11; i++)
+    l += i;
+
+  split(l, l1, l2);
+
+  // TODO: да се провери, че множествата на елементите на l1 и l2 общо правят
+  // множеството от елементите на l
+  CHECK_EQ(std::abs((int)length(l1) - (int)length(l2)), 1);
+  CHECK_EQ(length(l1) + length(l2), length(l));
+}
+
+TEST_CASE("Merge two lists") {
+  TestList l1, l2;
+  for(int x : {1, 3, 6, 8})
+    l1.insertLast(x);
+  for(int x : {2, 4, 5, 7, 9, 10})
+    l2.insertLast(x);
+
+  TestList l = merge(l1, l2);
+
+  // получихме числата от 1 до 10
+  int i = 1;
+  for(int x : l)
+    CHECK_EQ(i++, x);
+  CHECK_EQ(i, 11);
+}
+
+TEST_CASE("Merge sort a list") {
+  TestList l;
+  for(int x : { 5, 2, 7, 1, 10, 3, 6, 8, 4, 9})
+    l.insertLast(x);
+
+  TestList result = mergeSort(l);
+
+  // получихме числата от 1 до 10
+  int i = 1;
+  for(int x : result)
+    CHECK_EQ(i++, x);
+  CHECK_EQ(i, 11);  
 }
