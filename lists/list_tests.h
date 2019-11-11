@@ -60,6 +60,7 @@ TEST_CASE_TEMPLATE("Delete last element works correctly", TestList, TEST_BOTH) {
   l += 11;
   // искаме да проверим дали последният елемент наистина е 11?
   it = l.begin();
+  REQUIRE(it);
   CHECK_EQ(*(it += 9), 11);
 }
 

@@ -2,8 +2,7 @@
 #include "doctest.h"
 
 #include "llist.cpp"
-
-using TestList = LinkedList<int>;
+#include "dllist.cpp"
 
 // обръща реда на елементите в даден списък
 // не зависи от реализацията на списъка
