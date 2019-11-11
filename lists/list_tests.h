@@ -1,4 +1,6 @@
-TEST_CASE("Insert consecutively elements at the end of the list") {
+#define TEST_BOTH LinkedList<int>, DoubleLinkedList<int>
+
+TEST_CASE_TEMPLATE("Insert consecutively elements at the end of the list", TestList, TEST_BOTH) {
   TestList l;
   for(int i = 1; i <= 10; i++)
     l += i;
@@ -8,13 +10,13 @@ TEST_CASE("Insert consecutively elements at the end of the list") {
   CHECK_EQ(i, 11);
 }
 
-TEST_CASE("Insert after every element in the list") {
+TEST_CASE_TEMPLATE("Insert after every element in the list", TestList, TEST_BOTH) {
   TestList l;
   // вмъкваме нечетните числа от 1 до 10
   for(int i = 1; i <= 9; i += 2)
     l += i;
   // вмъкваме след всяко число
-  for(TestList::I it = l.begin(); it; it += 2)
+  for(typename TestList::I it = l.begin(); it; it += 2)
     l.insertAfter(it, *it + 1);
 
   // трябва да сме получили последователните числа от 1 до 10
@@ -24,13 +26,13 @@ TEST_CASE("Insert after every element in the list") {
   CHECK_EQ(i, 11);
 }
 
-TEST_CASE("Delete every even element in a list") {
+TEST_CASE_TEMPLATE("Delete every even element in a list", TestList, TEST_BOTH) {
   TestList l;
   // всички числа от 1 до 10
   for(int i = 1; i <= 10; i++)
     l += i;
   // изтриваме всички четни
-  for(TestList::I it = l.begin(); it; ++it) {
+  for(typename TestList::I it = l.begin(); it; ++it) {
     int x;
     CHECK(l.deleteAfter(it, x));
     CHECK_EQ(x, *it + 1);
@@ -44,12 +46,12 @@ TEST_CASE("Delete every even element in a list") {
   CHECK_EQ(i, 11);
 }
 
-TEST_CASE("Delete last element works correctly") {
+TEST_CASE_TEMPLATE("Delete last element works correctly", TestList, TEST_BOTH) {
   TestList l;
   // всички числа от 1 до 10
   for(int i = 1; i <= 10; i++)
     l += i;
-  TestList::I it = l.begin();
+  typename TestList::I it = l.begin();
   it += 8;
   // върху предпоследния елемент сме
   int x;
@@ -63,7 +65,7 @@ TEST_CASE("Delete last element works correctly") {
 
 // TODO: отрицателни тестове за deleteAfter, deleteAt и deleteBefore
 
-TEST_CASE("Insert consecutively elements at the beginning of the list") {
+TEST_CASE_TEMPLATE("Insert consecutively elements at the beginning of the list", TestList, TEST_BOTH) {
   TestList l;
   // числата от 1 до 10
   for(int i = 1; i <= 10; i++)
@@ -76,13 +78,13 @@ TEST_CASE("Insert consecutively elements at the beginning of the list") {
   CHECK_EQ(i, -1);
 }
 
-TEST_CASE("Insert elements before every second element in the list") {
+TEST_CASE_TEMPLATE("Insert elements before every second element in the list", TestList, TEST_BOTH) {
   TestList l;
   // четните числа от 2 до 10
   for(int i = 2; i <= 10; i += 2)
     l += i;
   // вмъкваме преди всеки елемент
-  for(TestList::I it = l.begin(); it; ++it)
+  for(typename TestList::I it = l.begin(); it; ++it)
     l.insertBefore(it, *it - 1);
   // трябва да сме получили последователните числа от 1 до 10
   int i = 1;
@@ -93,13 +95,13 @@ TEST_CASE("Insert elements before every second element in the list") {
 
 // TODO: тестове за deleteFirst и deleteLast
 
-TEST_CASE("Delete every second element in the list") {
+TEST_CASE_TEMPLATE("Delete every second element in the list", TestList, TEST_BOTH) {
   TestList l;
   // числата от 1 до 10
   for(int i = 1; i <= 10; i++)
     l += i;
   int i = 1;
-  for(TestList::I it = l.begin(); it; ++it, i += 2) {
+  for(typename TestList::I it = l.begin(); it; ++it, i += 2) {
     int x;
     // не разчитаме на стойността на итератора след изтриването
     CHECK(l.deleteAt(it++, x));
@@ -115,14 +117,14 @@ TEST_CASE("Delete every second element in the list") {
 
 // TODO: тест за изтриване на последния елемент от списъка, така че след това да остане празен
 
-TEST_CASE("Delete before every second element of the list") {
+TEST_CASE_TEMPLATE("Delete before every second element of the list", TestList, TEST_BOTH) {
   TestList l;
   // числата от 1 до 10
   for(int i = 1; i <= 10; i++)
     l += i;
   int i = 1;
   // изтриваме преди всички четни числа
-  for(TestList::I it = l.begin(); it; ++it, i += 2) {
+  for(typename TestList::I it = l.begin(); it; ++it, i += 2) {
     ++it;
     int x;
     CHECK(l.deleteBefore(it, x));
@@ -140,7 +142,7 @@ TEST_CASE("Delete before every second element of the list") {
 // TODO: тестове, че front и back остават коректно насочени след всяка операция
 // например, чрез вмъкване/изтриване на елемент в началото/края
 
-TEST_CASE("Copy initialization of lists avoids sharing") {
+TEST_CASE_TEMPLATE("Copy initialization of lists avoids sharing", TestList, TEST_BOTH) {
   TestList l1;
   // числата от 1 до 10
   for(int i = 1; i <= 10; i++)
@@ -170,7 +172,7 @@ TEST_CASE("Copy initialization of lists avoids sharing") {
   CHECK_EQ(i, 24);
 }
 
-TEST_CASE("Assignment of lists avoids sharing") {
+TEST_CASE_TEMPLATE("Assignment of lists avoids sharing", TestList, TEST_BOTH) {
   TestList l1, l2;
   // числата от 1 до 10
   for(int i = 1; i <= 10; i++)
@@ -204,7 +206,7 @@ TEST_CASE("Assignment of lists avoids sharing") {
   CHECK_EQ(i, 24);
 }
 
-TEST_CASE("Appending two lists") {
+TEST_CASE_TEMPLATE("Appending two lists", TestList, TEST_BOTH) {
   TestList l1, l2;
   // числата от 1 до 10
   for(int i = 1; i <= 10; i++)
@@ -225,7 +227,7 @@ TEST_CASE("Appending two lists") {
 
 // TODO: тестове за граничните случаи на append
 
-TEST_CASE("Append a second list by stealing its elements") {
+TEST_CASE_TEMPLATE("Append a second list by stealing its elements", TestList, TEST_BOTH) {
   TestList l1, l2;
   // числата от 1 до 10
   for(int i = 1; i <= 10; i++)
@@ -245,7 +247,7 @@ TEST_CASE("Append a second list by stealing its elements") {
   CHECK_EQ(i, 21);
 }
 
-TEST_CASE("Reversal of non-empty list") {
+TEST_CASE_TEMPLATE("Reversal of non-empty list", TestList, TEST_BOTH) {
   TestList l;
   // числата от 1 до 10
   for(int i = 1; i <= 10; i++)
@@ -259,7 +261,7 @@ TEST_CASE("Reversal of non-empty list") {
   CHECK_EQ(i, 0);
 }
 
-TEST_CASE("Length works correctly") {
+TEST_CASE_TEMPLATE("Length works correctly", TestList, TEST_BOTH) {
   TestList l;
   for(int i = 1; i <= 10; i++) {
     CHECK_EQ(length(l), i - 1);
@@ -268,7 +270,7 @@ TEST_CASE("Length works correctly") {
   CHECK_EQ(length(l), 10);
 }
 
-TEST_CASE("Split list of even length") {
+TEST_CASE_TEMPLATE("Split list of even length", TestList, TEST_BOTH) {
   TestList l, l1, l2;
   // числата от 1 до 10
   for(int i = 1; i <= 10; i++)
@@ -282,7 +284,7 @@ TEST_CASE("Split list of even length") {
   CHECK_EQ(length(l1) + length(l2), length(l));
 }
 
-TEST_CASE("Split list of odd length") {
+TEST_CASE_TEMPLATE("Split list of odd length", TestList, TEST_BOTH) {
   TestList l, l1, l2;
   // числата от 1 до 11
   for(int i = 1; i <= 11; i++)
@@ -296,7 +298,7 @@ TEST_CASE("Split list of odd length") {
   CHECK_EQ(length(l1) + length(l2), length(l));
 }
 
-TEST_CASE("Merge two lists") {
+TEST_CASE_TEMPLATE("Merge two lists", TestList, TEST_BOTH) {
   TestList l1, l2;
   for(int x : {1, 3, 6, 8})
     l1.insertLast(x);
@@ -312,7 +314,7 @@ TEST_CASE("Merge two lists") {
   CHECK_EQ(i, 11);
 }
 
-TEST_CASE("Merge sort a list") {
+TEST_CASE_TEMPLATE("Merge sort a list", TestList, TEST_BOTH) {
   TestList l;
   for(int x : { 5, 2, 7, 1, 10, 3, 6, 8, 4, 9})
     l.insertLast(x);
@@ -328,7 +330,7 @@ TEST_CASE("Merge sort a list") {
 
 int plus(const int& x, const int& y) { return x + y; }
 
-TEST_CASE("Sum list elements with foldr") {
+TEST_CASE_TEMPLATE("Sum list elements with foldr", TestList, TEST_BOTH) {
   TestList l;
   // числата от 1 до 10
   for(int i = 1; i <= 10; i++)
@@ -338,7 +340,7 @@ TEST_CASE("Sum list elements with foldr") {
   CHECK_EQ(foldr<typename TestList::I, int>([](int const& x, int const& y) { return x + y; }, 0, l.begin()), 55);
 }
 
-TEST_CASE("Sum list elements with foldl") {
+TEST_CASE_TEMPLATE("Sum list elements with foldl", TestList, TEST_BOTH) {
   TestList l;
   // числата от 1 до 10
   for(int i = 1; i <= 10; i++)
@@ -349,7 +351,7 @@ TEST_CASE("Sum list elements with foldl") {
 
 int square(int const& x) { return x * x; }
 
-TEST_CASE("Map list with square") {
+TEST_CASE_TEMPLATE("Map list with square", TestList, TEST_BOTH) {
   TestList l;
   // числата от 1 до 10
   for(int i = 1; i <= 10; i++)
@@ -365,7 +367,7 @@ TEST_CASE("Map list with square") {
   CHECK_EQ(i, 11);
 }
 
-TEST_CASE("Destrucive map list with square") {
+TEST_CASE_TEMPLATE("Destrucive map list with square", TestList, TEST_BOTH) {
   TestList l;
   // числата от 1 до 10
   for(int i = 1; i <= 10; i++)
@@ -383,7 +385,7 @@ TEST_CASE("Destrucive map list with square") {
 bool even(int const& x) { return x % 2 == 0; }
 bool odd (int const& x) { return x % 2 != 0; }
 
-TEST_CASE("Filter only even elements in a list") {
+TEST_CASE_TEMPLATE("Filter only even elements in a list", TestList, TEST_BOTH) {
   TestList l;
   // числата от 1 до 10
   for(int i = 1; i <= 10; i++)
@@ -401,7 +403,7 @@ TEST_CASE("Filter only even elements in a list") {
   CHECK_EQ(i, 12);
 }
 
-TEST_CASE("Sum odd squares in a list") {
+TEST_CASE_TEMPLATE("Sum odd squares in a list", TestList, TEST_BOTH) {
   TestList l;
   // числата от 1 до 5
   for(int i = 1; i <= 5; i++)
