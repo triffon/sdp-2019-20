@@ -76,5 +76,17 @@ List mergeSort(List const& l) {
 
 #include "lists_highorder.cpp"
 
+template <typename T>
+bool isPalindrome(DoubleLinkedList<T> const& dl) {
+  typename DoubleLinkedList<T>::I fit = dl.begin(), bit = dl.realEnd();
+  if (dl.empty())
+    return true;
+  while (fit != bit && fit.prev() != bit && *fit++ == *bit--);
+  return fit == bit || fit.prev() == bit;
+  // *fit != *bit --> намерили сме различни елементи
+  // fit == bit   --> итераторите са се срещнали
+  // fit.prev() == bit --> итераторите са се разминали 
+}
+
 #include "list_tests.h"
 

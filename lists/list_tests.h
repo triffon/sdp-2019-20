@@ -412,3 +412,33 @@ TEST_CASE_TEMPLATE("Sum odd squares in a list", TestList, TEST_BOTH) {
 
   CHECK_EQ(foldr(plus, 0, map(square, filter(odd, l)).begin()), 35);
 }
+
+TEST_CASE("Detect a palindrome of odd length") {
+  DoubleLinkedList<int> dl;
+  int i;
+  for(i = 0; i < 10; i++)
+    dl += i;
+  for(;i >= 0; i--)
+    dl += i;
+  CHECK(isPalindrome(dl));
+}
+
+TEST_CASE("Detect a palindrome of even length") {
+  DoubleLinkedList<int> dl;
+  int i;
+  for(i = 0; i < 10; i++)
+    dl += i;
+  for(i--; i >= 0; i--)
+    dl += i;
+  CHECK(isPalindrome(dl));
+}
+
+TEST_CASE("Detect a non-palindrome") {
+  DoubleLinkedList<int> dl;
+  int i;
+  for(i = 0; i < 10; i++)
+    dl += i;
+  dl += 1;
+  dl += 0;
+  CHECK(!isPalindrome(dl));
+}

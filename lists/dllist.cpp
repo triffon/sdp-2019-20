@@ -129,6 +129,7 @@ public:
 
   I begin() const { return I(front); }
   I end()   const { return I();      }
+  I realEnd() const { return I(back);}
 
   DoubleLinkedList<T>& operator+=(T const& x) { insertLast(x); return *this; }
 
