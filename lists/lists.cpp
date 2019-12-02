@@ -78,7 +78,7 @@ List mergeSort(List const& l) {
 
 template <typename T>
 bool isPalindrome(DoubleLinkedList<T> const& dl) {
-  typename DoubleLinkedList<T>::I fit = dl.begin(), bit = dl.realEnd();
+  typename DoubleLinkedList<T>::I fit = dl.begin(), bit = dl.last();
   if (dl.empty())
     return true;
   while (fit != bit && fit.prev() != bit && *fit++ == *bit--);
