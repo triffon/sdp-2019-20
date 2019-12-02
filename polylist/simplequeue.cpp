@@ -9,15 +9,13 @@ public:
   using LinkedQueue<T>::empty;  
   
   // включване на елемент
-  bool insert(T const& x) { return LinkedQueue<T>::enqueue(x); }
+  bool insert(T const& x) { return enqueue(x); }
 
   // изключване на елемент
   bool remove(T& x) {
-    if (LinkedQueue<T>::empty())
+    if (empty())
       return false;
-    x = LinkedQueue<T>::dequeue();
+    x = dequeue();
     return true;
   }
-
-  ~SimpleQueue() {}
 };

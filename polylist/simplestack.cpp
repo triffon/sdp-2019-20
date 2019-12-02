@@ -15,9 +15,9 @@ public:
 
   // изключване на елемент
   bool remove(T& x) {
-    if (LinkedStack<T>::empty())
+    if (empty())
       return false;
-    x = LinkedStack<T>::pop();
+    x = pop();
     return true;
   }
 };
