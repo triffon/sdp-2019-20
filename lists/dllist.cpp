@@ -139,6 +139,7 @@ public:
   void appendAssign(DoubleLinkedList& l);
 };
 
+// O(1) по време и по памет
 template <typename T>
 bool DoubleLinkedList<T>::insertAfter(I const& it, T const& x) {
   if (empty()) {
@@ -163,12 +164,7 @@ bool DoubleLinkedList<T>::insertAfter(I const& it, T const& x) {
   return true;
 }
 
-template <typename T>
-bool DoubleLinkedList<T>::deleteAfter(I const& it, T& x) {
-  return false;
-}
-
-// O(n) по време и O(1) по памет
+// O(1) по време и по памет
 template <typename T>
 bool DoubleLinkedList<T>::insertBefore(I const& it, T const& x) {
   if (empty())
@@ -192,30 +188,60 @@ bool DoubleLinkedList<T>::insertBefore(I const& it, T const& x) {
   return insertAfter(it.prev(), x);
 }
 
+// O(1) по време и памет
 template <typename T>
 bool DoubleLinkedList<T>::deleteAt(I const& it, T& x) {
-  if (it.ptr->prev != nullptr)
-    it.ptr->prev->next = it.ptr->next;
+  // ако it.ptr е nullptr, значи имаме предвид back
+  DLLE* toDelete = it ? it.ptr : back;
+  
+  if (toDelete == nullptr)
+    // опит за изтриване в празен списък!
+    return false;
+  
+  if (toDelete->prev != nullptr)
+    toDelete->prev->next = toDelete->next;
   else
     // изтриваме първия елемент, трябва да преместим front
-    front = it.ptr->next;
+    front = toDelete->next;
 
-  if (it.ptr->next != nullptr)
-    it.ptr->next->prev = it.ptr->prev;
+  if (toDelete->next != nullptr)
+    toDelete->next->prev = toDelete->prev;
   else
     // изтриваме последния елемент, трябва да преместим back
-    back = it.ptr->prev;
+    back = toDelete->prev;
 
   // изтриването на последния елемент работи както се очаква
-  x = it.ptr->data;
-  delete it.ptr;
+  x = toDelete->data;
+  delete toDelete;
   return true;
 }
 
-// O(n) по време и O(1) по памет
+// O(1) по време и памет
+template <typename T>
+bool DoubleLinkedList<T>::deleteAfter(I const& it, T& x) {
+  if (!it || it.ptr == back)
+    // опитваме се да изтриваме след края!
+    return false;
+  return deleteAt(it.next(), x);
+}
+
+// O(1) по време и памет
 template <typename T>
 bool DoubleLinkedList<T>::deleteBefore(I const& it, T& x) {
-  return false;
+  if (it.ptr == front)
+    // опитваме се да изтриваме преди началото
+    return false;
+  if (!it) {
+    // невалиден итератор <-> искаме да изтриваме преди края
+    if (front == back)
+      // имаме само един елемент или нямаме елементи
+      return false;
+    else
+      // иаме повече от един елемент
+      // опитваме се да изтриваме преди края
+      return deleteAt(I(back).prev(), x);
+  }
+  return deleteAt(it.prev(), x);
 }
 
 template <typename T>
@@ -244,6 +270,19 @@ void DoubleLinkedList<T>::erase() {
     deleteFirst();
 }
 
+// O(1) по време и памет
 template <typename T>
 void DoubleLinkedList<T>::appendAssign(DoubleLinkedList& l) {
+  if (back != nullptr)
+    back->next = l.front;
+  else
+    front = l.front;
+  
+  if (l.front != nullptr)
+    l.front->prev = back;
+
+  if (l.back != nullptr)
+    back = l.back;
+
+  l.front = l.back = nullptr;
 }

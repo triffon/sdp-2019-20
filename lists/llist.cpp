@@ -256,6 +256,8 @@ template <typename T>
 void LinkedList<T>::appendAssign(LinkedList& l) {
   if (back != nullptr)
     back->next = l.front;
+  else
+    front = l.front;
   
   if (l.back != nullptr)
     back = l.back;
