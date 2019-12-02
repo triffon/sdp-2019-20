@@ -160,7 +160,7 @@ bool DoubleLinkedList<T>::insertAfter(I const& it, T const& x) {
   DLLE *p = new DLLE{x, it.ptr->next, it.ptr};
   p->next->prev = p;
   p->prev->next = p;
-  return false;
+  return true;
 }
 
 template <typename T>
