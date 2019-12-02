@@ -11,3 +11,7 @@ using TestStack = SimpleStack<int>;
 using TestList  = StackQueueList<int>;
 
 #include "sqlist_tests.h"
+
+#include "slist.cpp"
+
+#include "slist_tests.h"
