@@ -1,3 +1,6 @@
+#ifndef __LLIST_CPP
+#define __LLIST_CPP
+
 template <typename T>
 struct LinkedListElement {
   T data;
@@ -264,3 +267,5 @@ void LinkedList<T>::appendAssign(LinkedList& l) {
 
   l.front = l.back = nullptr;
 }
+
+#endif

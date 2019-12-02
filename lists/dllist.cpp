@@ -1,3 +1,6 @@
+#ifndef __DLLIST_CPP
+#define __DLLIST_CPP
+
 template <typename T>
 struct DoubleLinkedListElement {
   T data;
@@ -287,3 +290,5 @@ void DoubleLinkedList<T>::appendAssign(DoubleLinkedList& l) {
 
   l.front = l.back = nullptr;
 }
+
+#endif
