@@ -87,3 +87,17 @@ TEST_CASE("Test Reduce")
     CHECK (test.reduce(plus,0) == test.sum());
 
 }
+
+TEST_CASE("Test Depth")
+{
+    BinTree<int> test;
+
+    test.addElement ("",7);
+    test.addElement ("L",30);
+    test.addElement ("LR",12);
+    test.addElement ("LRL",90);
+    test.addElement ("R",5);
+    test.addElement ("RL",50);
+
+    CHECK_EQ(depth(test.rootPos()), 4);
+}
