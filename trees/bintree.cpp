@@ -75,6 +75,8 @@ public:
   bool operator==(P const& pos) const { return ptr == pos.ptr; }
   bool operator!=(P const& pos) const { return !(*this == pos); }
 
+  P operator-() const { return left(); }
+  P operator+() const { return right(); }
 };
 
 template <class T>
@@ -90,6 +92,7 @@ public:
   //        BinTree (const T&, const BinTree<T>&, const BinTree<T>&);
 
   P rootPos() const { return P(root); }
+  operator P() const { return rootPos(); } 
 
   void addElement (const char*, const T&);
 
@@ -314,9 +317,9 @@ T BinTree<T>::reduceHelp (T (*op)(const T&, const T&), const T& null_val, BinTre
 
 template <typename T>
 unsigned depth(BinTreePosition<T> p) {
-  if (!p.valid())
+  if (!p)
     return 0;
-  return 1 + std::max(depth(p.left()), depth(p.right()));
+  return 1 + std::max(depth(-p), depth(+p));
 }
 
 #endif
