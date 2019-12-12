@@ -47,7 +47,7 @@ public:
 
   // ++pos
   P& operator++() {
-    return (*this = left());
+    return (*this = right());
   }
 
   // pos++
@@ -59,7 +59,7 @@ public:
 
   // --pos
   P& operator--() {
-    return (*this = right());
+    return (*this = left());
   }
 
   // pos--
@@ -94,7 +94,7 @@ public:
   P rootPos() const { return P(root); }
   operator P() const { return rootPos(); } 
 
-  void addElement (const char*, const T&);
+  BinTree<T>& addElement (const char*, const T&);
 
   void printTree (std::ostream&);
   void prettyPrint (std::ostream&);
@@ -147,13 +147,13 @@ BinTree<T>::BinTree (const T &x)
   }*/
 
 template <class T>
-void BinTree<T>::addElement (const char* trace, const T& x)
+BinTree<T>& BinTree<T>::addElement (const char* trace, const T& x)
 {
   if (strlen(trace) == 0)
     {
       assert (root == nullptr);
       root = new BinTreeNode<T> (x,nullptr,nullptr);
-      return;
+      return *this;
     }
 
   assert (root != nullptr);
@@ -180,6 +180,8 @@ void BinTree<T>::addElement (const char* trace, const T& x)
     assert (current->right == nullptr);
     current->right = new BinTreeNode<T> (x,nullptr,nullptr);
   }
+
+  return *this;
 
 }
 
