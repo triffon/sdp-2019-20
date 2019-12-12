@@ -34,6 +34,24 @@ public:
     assignFrom(pos, leaf.rootPos());
     return true;
   }
+
+  bool remove(T const& x) {
+    P pos = search(x);
+    if (!pos)
+      return false;
+
+    if (!-pos) {
+      assignFrom(pos, +pos);
+      return true;
+    }
+
+    if (!+pos) {
+      assignFrom(pos, -pos);
+      return true;
+    }
+
+    return false;
+  }
 };
 
 #endif
