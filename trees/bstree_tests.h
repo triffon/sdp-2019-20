@@ -43,11 +43,14 @@ TEST_CASE("Test not found") {
 TEST_CASE("Insert in empty tree and then search") {
   BSTree<int> bst;
   REQUIRE(bst.insert(3));
-  REQUIRE(bst.insert(6));
+  REQUIRE(bst.insert(5));
   REQUIRE(bst.insert(2));
   REQUIRE(bst.insert(4));
   REQUIRE(bst.insert(1));
-  REQUIRE(bst.insert(5));
+  REQUIRE(bst.insert(6));
+
+  std::ofstream dotfile("bstree2.dot");
+  bst.dottyPrint(dotfile);
 
   for(int i = 1; i <= 6; i++) {
     BSTree<int>::P pos = bst.search(i);

@@ -11,7 +11,7 @@ public:
   using BinTree<T>::rootPos;
   using BinTree<T>::assignFrom;
 
-  P search(T const& x) const {
+  P search(T const& x) {
     P pos = rootPos();
     while (pos && *pos != x)
       if (x < *pos)

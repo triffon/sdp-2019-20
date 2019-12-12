@@ -26,27 +26,28 @@ class BinTreePosition {
   
   using BTN = BinTreeNode<T>;
   using P = BinTreePosition<T>;
-  BTN* ptr;
+  BTN** ptr;
 
 public:
-  BinTreePosition(BTN* _ptr = nullptr) : ptr(_ptr) {}
+  BinTreePosition() : ptr(nullptr) {}
+  BinTreePosition(BTN*& node) : ptr(&node) {}
 
-  bool valid() const { return ptr != nullptr; }
+  bool valid() const { return ptr != nullptr && *ptr != nullptr; }
 
   P left() const {
     if (!valid())
       return P();    
-    return P(ptr->left);
+    return P((*ptr)->left);
   }
 
   P right() const {
     if (!valid())
       return P();    
-    return P(ptr->right);
+    return P((*ptr)->right);
   }
 
-  T const& get() const { return ptr->data; }
-  T&       get()       { return ptr->data; }
+  T const& get() const { return (*ptr)->data; }
+  T&       get()       { return (*ptr)->data; }
 
   // pos <-> pos.valid();
   operator bool() const { return valid(); }
@@ -78,7 +79,11 @@ public:
   // *pos = 3;
   T& operator*() { return get(); }
 
-  bool operator==(P const& pos) const { return ptr == pos.ptr; }
+  bool operator==(P const& pos) const {
+    return
+      (!valid() && !pos.valid()) ||
+      (valid() && pos.valid() && *ptr == *pos.ptr);
+  }
   bool operator!=(P const& pos) const { return !(*this == pos); }
 
   P operator-() const { return left(); }
@@ -91,14 +96,15 @@ class BinTree
 
 public:
 
+  using BTN = BinTreeNode<T>;
   using P = BinTreePosition<T>;
   
   BinTree ();
   BinTree (const T&);
   //        BinTree (const T&, const BinTree<T>&, const BinTree<T>&);
 
-  P rootPos() const { return P(root); }
-  operator P() const { return rootPos(); } 
+  P rootPos() { return P(root); }
+  bool empty() const { return root != nullptr; }
 
   BinTree<T>& addElement (const char*, const T&);
 
@@ -112,12 +118,14 @@ public:
   T reduce (T (*op)(const T&, const T&), const T& null_val);
 
   void assignFrom(P from, P to) {
-    // първо, изтриваме каквото има на позиция from
-    erase(from);
+    // първо, запомняме каквото има на позиция from
+    BTN* save = *from.ptr;
     // после, крадем това, което има на to
-    from.ptr = to.ptr;
-    // накрая, насочваме to към nullptr, за да няма грижа вече за него
-    to.ptr = nullptr;
+    *from.ptr = *to.ptr;
+    // после, насочваме to към nullptr, за да няма грижа вече за него
+    *to.ptr = nullptr;
+    // накрая, изтриваме това, което преди имаше в from
+    erase(P(save));
   }
 
 private:
@@ -344,7 +352,7 @@ void BinTree<T>::erase(P pos) {
   if (pos) {
     erase(-pos);
     erase(+pos);
-    delete pos.ptr;
+    delete *pos.ptr;
   }
 }
 
