@@ -17,7 +17,13 @@ struct BinTreeNode
 };
 
 template <typename T>
+class BinTree;
+
+template <typename T>
 class BinTreePosition {
+
+  friend class BinTree<T>;
+  
   using BTN = BinTreeNode<T>;
   using P = BinTreePosition<T>;
   BTN* ptr;
@@ -105,6 +111,15 @@ public:
 
   T reduce (T (*op)(const T&, const T&), const T& null_val);
 
+  void assignFrom(P from, P to) {
+    // първо, изтриваме каквото има на позиция from
+    erase(from);
+    // после, крадем това, което има на to
+    from.ptr = to.ptr;
+    // накрая, насочваме to към nullptr, за да няма грижа вече за него
+    to.ptr = nullptr;
+  }
+
 private:
   BinTreeNode<T> *root;
 
@@ -117,7 +132,7 @@ private:
 
   T reduceHelp (T (*op)(const T&, const T&), const T& null_val, BinTreeNode<T> *current);
 
-
+  void erase(P pos);
 };
 
 template <class T>
@@ -322,6 +337,15 @@ unsigned depth(BinTreePosition<T> p) {
   if (!p)
     return 0;
   return 1 + std::max(depth(-p), depth(+p));
+}
+
+template <typename T>
+void BinTree<T>::erase(P pos) {
+  if (pos) {
+    erase(-pos);
+    erase(+pos);
+    delete pos.ptr;
+  }
 }
 
 #endif
