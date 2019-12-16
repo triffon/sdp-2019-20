@@ -16,10 +16,10 @@ public:
   virtual bool remove(K const& key) = 0;
 
   // вектор от всички ключове
-  virtual std::vector<K> keys() const = 0;
+  virtual std::vector<K> keys() = 0;
 
   // вектор от всички стойности
-  virtual std::vector<K> values() const = 0;
+  virtual std::vector<V> values() = 0;
 };
 
 #endif

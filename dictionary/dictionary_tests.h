@@ -50,3 +50,23 @@ TEST_CASE("Remove some added elements in a dictionary and try to look them up") 
     CHECK_EQ(*val, i * 10);
   }
 }
+
+TEST_CASE("Enumerate keys") {
+  TestDictionary dict;
+  for (int i : {1, 3, 6, 2, 5, 4})
+    REQUIRE(dict.add(i, i * 10));
+  int i = 1;
+  for(int key : dict.keys())
+    CHECK(key == i++);
+}
+
+TEST_CASE("Enumerate values") {
+  TestDictionary dict;
+  for (int i : {1, 3, 6, 2, 5, 4})
+    REQUIRE(dict.add(i, i * 10));
+  int i = 10;
+  for(int value : dict.values()) {
+    CHECK(value == i);
+    i += 10;
+  }
+}

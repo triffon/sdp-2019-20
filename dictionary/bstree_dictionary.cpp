@@ -13,6 +13,24 @@ class BSTreeDictionary : public Dictionary<K, V>, BSTree<KeyValuePair<K, V>> {
 
   using BST::search;
   using BST::insert;
+  using BST::rootPos;
+
+  void collectKeys(std::vector<K>& keys, P pos) {
+    if (pos) {
+      collectKeys(keys, -pos);
+      keys.push_back((*pos).getKey());
+      collectKeys(keys, +pos);
+    } 
+  }
+
+  void collectValues(std::vector<V>& values, P pos) {
+    if (pos) {
+      collectValues(values, -pos);
+      values.push_back((*pos).getValue());
+      collectValues(values, +pos);
+    } 
+  }
+
   
 public:
   // търси стойността, свързана с ключа key, ако я има, с възможност за промяна
@@ -34,10 +52,19 @@ public:
   }
 
   // вектор от всички ключове
-  std::vector<K> keys() const { return std::vector<K>(); }
+  std::vector<K> keys() {
+    std::vector<K> result;
+    collectKeys(result, rootPos());
+    return result;
+  }
 
   // вектор от всички стойности
-  std::vector<K> values() const { return std::vector<V>(); }
+  std::vector<V> values() {
+    std::vector<V> result;
+    collectValues(result, rootPos());
+    return result;
+  }
+
 };
 
 #endif
