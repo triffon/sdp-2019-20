@@ -103,6 +103,33 @@ public:
   BinTree (const T&);
   //        BinTree (const T&, const BinTree<T>&, const BinTree<T>&);
 
+  // O(n) по памет и време
+  BinTree(BinTree& bt) : root(nullptr) {
+    copy(bt.rootPos());
+  }
+
+  // O(1) по памет и време
+  BinTree(BinTree&& bt) : root(nullptr) {
+    assignFrom(rootPos(), bt.rootPos());
+  }
+
+  BinTree& operator=(BinTree& bt) {
+    if (this != &bt) {
+      erase(rootPos());
+      copy(bt.rootPos());
+    }
+    return *this;
+  }
+
+  BinTree& operator=(BinTree&& bt) {
+    if (this != &bt)
+      assignFrom(rootPos(), bt.rootPos());
+    return *this;
+  }
+
+
+  ~BinTree() { erase(rootPos()); }
+
   P rootPos() { return P(root); }
   bool empty() const { return root == nullptr; }
 
@@ -141,6 +168,7 @@ private:
   T reduceHelp (T (*op)(const T&, const T&), const T& null_val, BinTreeNode<T> *current);
 
   void erase(P pos);
+  P copy(P pos);
 };
 
 template <class T>
@@ -354,6 +382,14 @@ void BinTree<T>::erase(P pos) {
     erase(+pos);
     delete *pos.ptr;
   }
+}
+
+template <typename T>
+BinTreePosition<T> BinTree<T>::copy(P pos) {
+  // допускаме, че дървото е празно
+  if (pos)
+    root = new BTN(*pos, copy(-pos).ptr(), copy(+pos).ptr());
+  return rootPos();
 }
 
 #endif
