@@ -9,6 +9,9 @@ class KeyValuePair {
 public:
   KeyValuePair(K const& k = K(), V const& v = V()) : key(k), value(v) {}
 
+  K const& getKey()   const { return key; }
+  V&       getValue()       { return value; }
+
   bool operator==(KeyValuePair const& kvp) const { return key == kvp.key; }
   bool operator!=(KeyValuePair const& kvp) const { return !(*this == kvp); }
   bool operator< (KeyValuePair const& kvp) const { return key < kvp.key; }
