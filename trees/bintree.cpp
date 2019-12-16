@@ -104,7 +104,7 @@ public:
   //        BinTree (const T&, const BinTree<T>&, const BinTree<T>&);
 
   P rootPos() { return P(root); }
-  bool empty() const { return root != nullptr; }
+  bool empty() const { return root == nullptr; }
 
   BinTree<T>& addElement (const char*, const T&);
 
