@@ -1,9 +1,9 @@
-TEST_CASE("Search in an empty dictionary") {
+TEST_CASE_TEMPLATE("Search in an empty dictionary", TestDictionary, TEST_BOTH) {
   TestDictionary dict;
   CHECK(dict.lookup(1) == nullptr);
 }
 
-TEST_CASE("Add a single element in an empty dictionary") {
+TEST_CASE_TEMPLATE("Add a single element in an empty dictionary", TestDictionary, TEST_BOTH) {
   TestDictionary dict;
   REQUIRE(dict.add(1, 10));
   int* val = dict.lookup(1);
@@ -11,14 +11,14 @@ TEST_CASE("Add a single element in an empty dictionary") {
   CHECK_EQ(*val, 10);
 }
 
-TEST_CASE("Remove the last element in a dictionary") {
+TEST_CASE_TEMPLATE("Remove the last element in a dictionary", TestDictionary, TEST_BOTH) {
   TestDictionary dict;
   REQUIRE(dict.add(1, 10));
   REQUIRE(dict.remove(1));
   CHECK(dict.lookup(1) == nullptr);
 }
 
-TEST_CASE("Add many elements in a dictionary and look them up") {
+TEST_CASE_TEMPLATE("Add many elements in a dictionary and look them up", TestDictionary, TEST_BOTH) {
   TestDictionary dict;
   for (int i : {1, 3, 6, 2, 4})
     REQUIRE(dict.add(i, i * 10));
@@ -33,7 +33,7 @@ TEST_CASE("Add many elements in a dictionary and look them up") {
     CHECK(dict.lookup(i) == nullptr);
 }
 
-TEST_CASE("Remove some added elements in a dictionary and try to look them up") {
+TEST_CASE_TEMPLATE("Remove some added elements in a dictionary and try to look them up", TestDictionary, TEST_BOTH) {
   TestDictionary dict;
   for (int i : {1, 3, 6, 2, 4})
     REQUIRE(dict.add(i, i * 10));
@@ -51,7 +51,7 @@ TEST_CASE("Remove some added elements in a dictionary and try to look them up") 
   }
 }
 
-TEST_CASE("Enumerate keys") {
+TEST_CASE_TEMPLATE("Enumerate keys", TestDictionary, TEST_BOTH) {
   TestDictionary dict;
   for (int i : {1, 3, 6, 2, 5, 4})
     REQUIRE(dict.add(i, i * 10));
@@ -60,7 +60,7 @@ TEST_CASE("Enumerate keys") {
     CHECK(key == i++);
 }
 
-TEST_CASE("Enumerate values") {
+TEST_CASE_TEMPLATE("Enumerate values", TestDictionary, TEST_BOTH) {
   TestDictionary dict;
   for (int i : {1, 3, 6, 2, 5, 4})
     REQUIRE(dict.add(i, i * 10));
