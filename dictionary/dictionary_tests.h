@@ -1,3 +1,5 @@
+#include <fstream>
+
 TEST_CASE_TEMPLATE("Search in an empty dictionary", TestDictionary, TEST_BOTH) {
   TestDictionary dict;
   CHECK(dict.lookup(1) == nullptr);
@@ -7,7 +9,7 @@ TEST_CASE_TEMPLATE("Add a single element in an empty dictionary", TestDictionary
   TestDictionary dict;
   REQUIRE(dict.add(1, 10));
   int* val = dict.lookup(1);
-  CHECK(val != nullptr);
+  REQUIRE(val != nullptr);
   CHECK_EQ(*val, 10);
 }
 
@@ -68,5 +70,67 @@ TEST_CASE_TEMPLATE("Enumerate values", TestDictionary, TEST_BOTH) {
   for(int value : dict.values()) {
     CHECK(value == i);
     i += 10;
+  }
+}
+
+TEST_CASE_TEMPLATE("Add names with phone numbers and look them up", TestStringDictionary, TEST_BOTH_STRING) {
+  TestStringDictionary dict;
+  std::ifstream fi("../phonebook.txt");
+  std::string phone, name;
+  while (fi) {
+    std::getline(fi, phone, ',');
+    std::getline(fi, name);
+    if (fi)
+      CHECK(dict.add(name, phone));
+  }
+  fi.close();
+
+  fi.open("../phonebook_shuffled.txt");
+  while (fi) {
+    std::getline(fi, phone, ',');
+    std::getline(fi, name);
+    if (fi) {
+      std::string* val = dict.lookup(name);
+      REQUIRE(val != nullptr);
+      CHECK(*val == phone);
+    }
+  }
+}
+
+TEST_CASE_TEMPLATE("Add names with phone numbers, remove some, and then look them up", TestStringDictionary, TEST_BOTH_STRING) {
+  TestStringDictionary dict;
+  std::ifstream fi("../phonebook.txt");
+  std::string phone, name;
+  while (fi) {
+    std::getline(fi, phone, ',');
+    std::getline(fi, name);
+    if (fi)
+      CHECK(dict.add(name, phone));
+  }
+  fi.close();
+
+  // махаме от речника всички имена, започващи с 'A'
+  fi.open("../phonebook.txt");
+  while (fi) {
+    std::getline(fi, phone, ',');
+    std::getline(fi, name);
+    if (fi && name[0] == 'A')
+      CHECK(dict.remove(name));
+  }
+  fi.close();
+
+  fi.open("../phonebook_shuffled.txt");
+  while (fi) {
+    std::getline(fi, phone, ',');
+    std::getline(fi, name);
+    if (fi) {
+      std::string* val = dict.lookup(name);
+      if (name[0] == 'A')
+        CHECK_EQ(val, nullptr);
+      else {
+        REQUIRE(val != nullptr);
+        CHECK(*val == phone);
+      }
+    }
   }
 }
