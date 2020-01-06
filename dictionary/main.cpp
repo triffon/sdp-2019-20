@@ -27,3 +27,19 @@ unsigned stringHashFunction(std::string const& s) {
                          LinkedHash<std::string, std::string, stringHashFunction>
 
 #include "dictionary_tests.h"
+
+#include "set.h"
+
+template <typename T>
+using BSTreeSet = Set<BSTreeDictionary, T>;
+
+using BSTreeIntSet = BSTreeSet<int>;
+
+template <typename K, typename V>
+using LinkedHashSimple = LinkedHash<K, V, simpleHashFunction>;
+
+using HashIntSet = Set<LinkedHashSimple, int>;
+
+#define TEST_SET_ALL BSTreeIntSet, HashIntSet
+
+#include "set_tests.h"
