@@ -104,9 +104,10 @@ Path<V> bfsPath(Graph<V, hashFunction>& g, V const& u, V const& v) {
   Path<V> result;
   VertexSet<V> visited;
   LinkedQueue<V> queue;
-  // на ниво 1 е само върха u
   LinkedStack<Edge<V>> edges;
+  // на ниво 1 е само върхът u
   queue.enqueue(u);
+  visited.insert(u);
   while (!queue.empty()) {
     // вземаме поредния връх
     V current = queue.dequeue();
@@ -129,13 +130,11 @@ Path<V> bfsPath(Graph<V, hashFunction>& g, V const& u, V const& v) {
       return result;
     }
 
-    // маркираме current като обходен
-    visited.insert(current);
-
     // маркираме непосетените наследници на current за посещаване като ги добавяме в опашката
     for(V u : g.successors(current))
       if (!visited.contains(u)) {
         queue.enqueue(u);
+        visited.insert(u);
         // помним и реброто, по което сме минали
         edges.push(Edge<V>{current, u});
       }
