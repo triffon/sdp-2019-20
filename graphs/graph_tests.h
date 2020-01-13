@@ -1,25 +1,4 @@
-TestGraph createEmptyGraph(int n) {
-  TestGraph g;
-  for(int i = 1; i <= n; i++)
-    g.addVertex(i);
-  return g;
-}
-
-TestGraph createTestGraph() {
-  TestGraph g = createEmptyGraph(6);
-  std::vector<std::pair<int, int>> v = {{1, 2}, {1, 3}, {2, 3}, {3, 4}, {3, 5}, {5, 4}, {5, 2}, {6, 2}, {5, 6}};
-  for(auto p : v)
-    g.addEdge(p.first, p.second);
-  return g;
-}
-
-TestGraph createFullGraph(int n) {
-  TestGraph g = createEmptyGraph(n);
-  for(int i = 1; i <= n; i++)
-    for(int j = 1; j <= n; j++)
-      g.addEdge(i, j);
-  return g;
-}
+#include "tests_helpers.h"
 
 TEST_CASE("All vertices in a full graph") {
   const int N = 3;
@@ -36,7 +15,7 @@ TEST_CASE("All vertices in a full graph") {
 TEST_CASE("No edges in an empty graph") {
   const int N = 3;
   TestGraph g = createEmptyGraph(N);
-  
+
   for(int i = 1; i <= N; i++) {
     // искаме да няма наследници
     CHECK(g.successors(i).empty());
@@ -52,7 +31,7 @@ TEST_CASE("One edge in a one-edged graph") {
 
   for(int v : g.successors(1))
     CHECK_EQ(v, 2);
-  
+
   for(int i = 1; i <= N; i++)
     for(int j = 1; j <= N; j++)
       CHECK_EQ(g.isEdge(i, j), i == 1 && j == 2);
