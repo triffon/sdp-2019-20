@@ -6,6 +6,7 @@
 #include "doctest.h"
 
 #include "graph.cpp"
+#include "set.h"
 
 unsigned simpleHashFunction(int const& x) {
   return x;
@@ -17,6 +18,14 @@ template <typename V>
 using Path = std::vector<V>;
 
 using TestPath = Path<int>;
+
+template <typename K, typename V>
+using LinkedHashSimple = LinkedHash<K, V, simpleHashFunction>;
+
+template <typename V>
+using VertexSet = Set<LinkedHashSimple, V>;
+
+using TestVertexSet = VertexSet<int>;
 
 #include "graph_tests.h"
 
@@ -39,13 +48,15 @@ bool isSymmetric(Graph<V, hashFunction>& g) {
 }
 
 template <typename V, HashFunction<V> hashFunction>
-bool dfsPathRec(Graph<V, hashFunction>& g, V const& u, V const& v, Path<V>& path) {
+bool dfsPathRec(Graph<V, hashFunction>& g, V const& u, V const& v, Path<V>& path, VertexSet<V>& visited) {
   // дали вече този връх го има в пътя?
-  if (std::find(path.begin(), path.end(), u) != path.end())
+  //  if (std::find(path.begin(), path.end(), u) != path.end())
+  if (visited.contains(u))
     return false;
 
   // няма да зациклим, добавяме го в пътя
   path.push_back(u);
+  visited.insert(u);
 
   if (u == v)
     // намерихме път!
@@ -53,7 +64,7 @@ bool dfsPathRec(Graph<V, hashFunction>& g, V const& u, V const& v, Path<V>& path
 
   // търсим път от някой от наследниците w на u до v
   for(V w : g.successors(u))
-    if (dfsPathRec(g, w, v, path))
+    if (dfsPathRec(g, w, v, path, visited))
       return true;
 
   // от никой от наследниците на u не можем да стигнем до v
@@ -73,7 +84,8 @@ void printPath(Path<V> const& path) {
 template <typename V, HashFunction<V> hashFunction>
 Path<V> dfsPath(Graph<V, hashFunction>& g, V const& u, V const& v) {
   Path<V> result;
-  dfsPathRec(g, u, v, result);
+  VertexSet<V> visited;
+  dfsPathRec(g, u, v, result, visited);
   printPath(result);
   return result;
 }

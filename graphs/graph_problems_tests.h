@@ -68,10 +68,12 @@ TEST_CASE("DFS always finds path in a full graph") {
 }
 
 TEST_CASE("DFS never finds path in a full graph plus an isolated vertex") {
-  int const N = 6;
+  int const N = 16;
+  std::clog << "start: DFS never finds path in a full graph plus an isolated vertex\n";
   TestGraph g = createFullGraph(N);
   g.addVertex(N + 1);
   CHECK(dfsPath(g, 1, N + 1).empty());
+  std::clog << "end: DFS never finds path in a full graph plus an isolated vertex\n";
 }
 
 TEST_CASE("DFS finds path in the sample graph") {
