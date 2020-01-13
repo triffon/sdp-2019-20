@@ -21,5 +21,14 @@ std::vector<V> childless(Graph<V, hashFunction>& g) {
   return result;
 }
 
+template <typename V, HashFunction<V> hashFunction>
+bool isSymmetric(Graph<V, hashFunction>& g) {
+  for(V u : g.vertices())
+    for(V v : g.successors(u))
+      if (!g.isEdge(v, u))
+        return false;
+  return true;
+}
+
 #include "graph_problems_tests.h"
 

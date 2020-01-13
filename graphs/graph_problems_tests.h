@@ -20,3 +20,31 @@ TEST_CASE("No vertices in a full graph are childless") {
   TestGraph g = createFullGraph(6);
   CHECK(childless(g).empty());
 }
+
+TEST_CASE("Empty graph is symmetric") {
+  TestGraph g = createEmptyGraph(6);
+  CHECK(isSymmetric(g));
+}
+
+TEST_CASE("Full graph is symmetric") {
+  TestGraph g = createFullGraph(6);
+  CHECK(isSymmetric(g));
+}
+
+TEST_CASE("Sample graph is not symmetric") {
+  TestGraph g = createTestGraph();
+  CHECK(!isSymmetric(g));
+}
+
+TEST_CASE("Simple graph is symmetric") {
+  TestGraph g = createEmptyGraph(3);
+  CHECK(isSymmetric(g));
+  g.addEdge(1, 3);
+  CHECK(!isSymmetric(g));
+  g.addEdge(3, 1);
+  CHECK(isSymmetric(g));
+  g.addEdge(1, 2);
+  CHECK(!isSymmetric(g));
+  g.addEdge(2, 1);
+  CHECK(isSymmetric(g));
+}
