@@ -10,6 +10,11 @@ unsigned simpleHashFunction(int const& x) {
 
 using TestGraph = Graph<int, simpleHashFunction>;
 
+template <typename V>
+using Path = std::vector<V>;
+
+using TestPath = Path<int>;
+
 #include "graph_tests.h"
 
 template <typename V, HashFunction<V> hashFunction>
