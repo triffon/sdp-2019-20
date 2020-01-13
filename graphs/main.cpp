@@ -4,6 +4,10 @@
 
 #include "graph.cpp"
 
-using TestGraph = Graph<int>;
+unsigned simpleHashFunction(int const& x) {
+  return x;
+}
+
+using TestGraph = Graph<int, simpleHashFunction>;
 
 #include "graph_tests.h"

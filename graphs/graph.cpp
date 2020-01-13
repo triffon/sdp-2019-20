@@ -4,14 +4,10 @@
 #include <vector>
 #include "linked_hash.cpp"
 
-unsigned simpleHashFunction(int const& x) {
-  return x;
-}
-
-template <typename V>
+template <typename V, HashFunction<V> hashFunction>
 class Graph {
   using VertexList = LinkedList<V>;
-  using SuccList = LinkedHash<V, VertexList, simpleHashFunction>;
+  using SuccList = LinkedHash<V, VertexList, hashFunction>;
   
   SuccList graph;
   VertexList emptyVertexList;
