@@ -4,4 +4,6 @@
 
 #include "graph.cpp"
 
+using TestGraph = Graph<int>;
+
 #include "graph_tests.h"
