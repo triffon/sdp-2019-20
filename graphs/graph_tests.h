@@ -72,13 +72,13 @@ TEST_CASE("Check edges in a simple graph") {
   CHECK(g.isEdge(5, 6));
 
   for(int v : g.successors(1))
-    CHECK(v == 2 || v == 3);
+    CHECK((v == 2 || v == 3));
 
   for(int v : g.successors(3))
-    CHECK(v == 4 || v == 5);
+    CHECK((v == 4 || v == 5));
 
   for(int v : g.successors(5))
-    CHECK(v == 4 || v == 2 || v == 6);
+    CHECK((v == 4 || v == 2 || v == 6));
 }
 
 TEST_CASE("Check edges in a full graph") {
@@ -91,7 +91,7 @@ TEST_CASE("Check edges in a full graph") {
 
   for(int i = 1; i <= N; i++)
     for(int j : g.successors(i))
-      CHECK(1 <= j && j <= N);
+      CHECK((1 <= j && j <= N));
 }
 
 TEST_CASE("Remove vertex correctly removes vertex from an empty graph") {
@@ -102,7 +102,7 @@ TEST_CASE("Remove vertex correctly removes vertex from an empty graph") {
   CHECK(g.removeVertex(3));
 
   for(int i : g.vertices())
-    CHECK(1 <= i && i <= 6 && i != 3);
+    CHECK((1 <= i && i <= 6 && i != 3));
 
   CHECK(!g.removeVertex(3));
 }
@@ -129,7 +129,7 @@ TEST_CASE("Remove vertex correctly removes vertex from a full graph") {
   CHECK(g.removeVertex(2));
 
   for(int i = 1; i <= 6; i++)
-    CHECK(!g.isEdge(2, i) && !g.isEdge(i, 2));
+    CHECK((!g.isEdge(2, i) && !g.isEdge(i, 2)));
 
   CHECK(g.successors(2).empty());
 
