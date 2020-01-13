@@ -20,6 +20,10 @@ class LinkedHash : public Dictionary<K, V> {
     return table[hashFunction(key) % HASH_SIZE];
   }
 
+  Bucket const& findBucketConst(K const& key) const {
+    return table[hashFunction(key) % HASH_SIZE];
+  }
+
 public:
   // търси стойността, свързана с ключа key, ако я има, с възможност за промяна
   V* lookup(K const& key) {
@@ -27,6 +31,14 @@ public:
     for(KVP& kv : b)
       if (kv.getKey() == key)
         return &kv.getValue();
+    return nullptr;
+  }
+
+  V const* lookupConst(K const& key) const {
+    Bucket const& b = findBucketConst(key);
+    for(KVP const& kv : b)
+      if (kv.getKey() == key)
+        return &kv.getValueConst();
     return nullptr;
   }
 
