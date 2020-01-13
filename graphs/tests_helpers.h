@@ -24,9 +24,9 @@ TestGraph createFullGraph(int n) {
   return g;
 }
 
-bool isPath(TestGraph& g, TestPath const& p) {
-  if (p.empty())
-    return true;
+bool isPath(TestGraph& g, TestPath const& p, int u, int v) {
+  if (p.empty() || p[0] != u || p[p.size() - 1] != v)
+    return false;
   for(int i = 0; i < p.size() - 1; i++)
     if (!g.isEdge(p[i], p[i+1]))
       return false;

@@ -49,47 +49,47 @@ TEST_CASE("Simple graph is symmetric") {
   CHECK(isSymmetric(g));
 }
 
-TEST_CASE("DFS does not find path in empty graph") {
+TEST_CASE_TEMPLATE("No path in empty graph", PathFinder, TEST_BOTH) {
   int const N = 6;
   TestGraph g = createEmptyGraph(N);
   for(int i = 1; i <= N; i++)
     for(int j = 1; j <= N; j++)
       if (i != j)
-        CHECK(dfsPath(g, i, j).empty());
+        CHECK(PathFinder::findPath(g, i, j).empty());
 }
 
-TEST_CASE("DFS always finds path in a full graph") {
+TEST_CASE_TEMPLATE("Path between every two vertices in a full graph", PathFinder, TEST_BOTH) {
   int const N = 6;
   TestGraph g = createFullGraph(N);
   for(int i = 1; i <= N; i++)
     for(int j = 1; j <= N; j++)
       if (i != j)
-        CHECK(isPath(g, dfsPath(g, i, j)));
+        CHECK(isPath(g, PathFinder::findPath(g, i, j), i, j));
 }
 
-TEST_CASE("DFS never finds path in a full graph plus an isolated vertex") {
+TEST_CASE_TEMPLATE("No path to an isolated vertex", PathFinder, TEST_BOTH) {
   int const N = 16;
-  std::clog << "start: DFS never finds path in a full graph plus an isolated vertex\n";
+  std::clog << "start: No path to an isolated vertex\n";
   TestGraph g = createFullGraph(N);
   g.addVertex(N + 1);
-  CHECK(dfsPath(g, 1, N + 1).empty());
-  std::clog << "end: DFS never finds path in a full graph plus an isolated vertex\n";
+  CHECK(PathFinder::findPath(g, 1, N + 1).empty());
+  std::clog << "end: No path to an isolated vertex\n";
 }
 
-TEST_CASE("DFS finds path in the sample graph") {
+TEST_CASE_TEMPLATE("Paths in the sample graph", PathFinder, TEST_BOTH) {
   TestGraph g = createTestGraph();
   for(int i = 2; i <= 6; i++)
-    CHECK(isPath(g, dfsPath(g, 1, i)));
+    CHECK(isPath(g, PathFinder::findPath(g, 1, i), 1, i));
 
   for(int i = 2; i <= 6; i++)
-    CHECK(dfsPath(g, i, 1).empty());
+    CHECK(PathFinder::findPath(g, i, 1).empty());
 
   for(int i = 1; i <= 6; i++)
     if (i != 4)
-      CHECK(dfsPath(g, 4, i).empty());
+      CHECK(PathFinder::findPath(g, 4, i).empty());
 
   for(int i : {2, 3, 5, 6})
     for(int j = 1; j <= 6; j++)
       if (i != j && j != 1)
-        CHECK(isPath(g, dfsPath(g, i, j)));
+        CHECK(isPath(g, PathFinder::findPath(g, i, j), i, j));
 }
