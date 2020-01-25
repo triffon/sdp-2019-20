@@ -31,7 +31,7 @@ public:
 
   bool removeVertex(V const& v) {
     // първо махаме ребрата към v
-    for(int u : vertices())
+    for(V u : vertices())
       removeEdge(u, v);
 
     return graph.remove(v);
@@ -41,7 +41,7 @@ public:
     VertexList* succs = graph.lookup(u);
     if (succs == nullptr)
       return false;
-    for(int w : *succs)
+    for(V w : *succs)
       if (w == v)
         return true;
     return false;
